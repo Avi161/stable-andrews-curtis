@@ -1,0 +1,60 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="theme-color" content="#FAF9F6">
+<title>Deck remote</title>
+<style>
+  :root { --ink:#191813; --paper:#FAF9F6; --blue:#2B54C4; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; margin:0; }
+  body {
+    background:var(--paper); color:var(--ink); overscroll-behavior:none;
+    font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+    display:flex; flex-direction:column; gap:10px; padding:12px;
+  }
+  .bar { display:flex; align-items:baseline; gap:12px; font-size:15px; opacity:0.6; }
+  .bar b { font-size:26px; opacity:1; font-weight:500; }
+  .big { flex:1; display:flex; gap:10px; }
+  button {
+    font:inherit; color:var(--ink); background:#fff; cursor:pointer;
+    border:1px solid rgba(25,24,19,0.18); border-radius:18px;
+  }
+  button:active { background:var(--blue); color:#fff; border-color:var(--blue); }
+  .big button { flex:1; font-size:34px; }
+  .big .next { flex:2; background:var(--blue); color:#fff; border-color:var(--blue); }
+  .row { display:flex; gap:10px; }
+  .row button { flex:1; padding:16px 0; font-size:15px; }
+</style>
+<div class="bar"><b id="pos">–</b><span id="sub"></span><span id="net" style="margin-left:auto">…</span></div>
+<div class="big">
+  <button onclick="go('prev')">‹</button>
+  <button class="next" onclick="go('next')">›</button>
+</div>
+<div class="row">
+  <button onclick="go('prevslide')">◀ slide</button>
+  <button onclick="go('nextslide')">slide ▶</button>
+</div>
+<div class="row">
+  <button onclick="go('first')">start</button>
+  <button onclick="go('end')">last</button>
+  <button onclick="go('appendix')">appendix</button>
+  <button onclick="go('full')">present</button>
+</div>
+<script>
+  function go(a) {
+    if (navigator.vibrate) navigator.vibrate(8);
+    fetch('/_cmd?a=' + a).then(r => r.json()).then(paint).catch(fail);
+  }
+  function paint(s) {
+    document.getElementById('pos').textContent = s.slide + ' / ' + s.n;
+    document.getElementById('sub').textContent = s.steps ? ('part ' + (s.step + 1) + ' of ' + (s.steps + 1)) : '';
+    document.getElementById('net').textContent = '● linked';
+    document.getElementById('net').style.color = '#2B54C4';
+  }
+  function fail() {
+    document.getElementById('net').textContent = '○ no deck';
+    document.getElementById('net').style.color = '#E05B2B';
+  }
+  setInterval(() => fetch('/_where').then(r => r.json()).then(paint).catch(fail), 1200);
+  fetch('/_where').then(r => r.json()).then(paint).catch(fail);
+</script>
