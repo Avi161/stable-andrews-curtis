@@ -1,6 +1,6 @@
-# Speaker notes — The Andrews–Curtis Conjecture
+# Speaker notes — The Stable Andrews–Curtis Conjecture
 
-Deck: open `index.html` in Chrome. `F` = fullscreen (or the **present ⤢** pill, bottom left), `m` = the slide menu (the **☰** button, top left — click any title to jump), `→`/`space` = next, `←` = back, `a` = jump to Q&A appendix, `Home`/`End` = first/last core slide. `↓` (or `n`) = **skip the rest of this slide's sub-steps and move on**, `↑` (or `p`) = back a whole slide; on any stepped slide a faint **`skip parts →`** pill also sits above the slide counter, bottom right, if you would rather click it. Slides 5, 6, 8, 9, 11, 12, 13, and 16 are **click-throughs** (appendix 1 too); slide 6 auto-plays its first S-move on one press. Slides carry almost no words by design — **you** are the words. One idea per slide, ~50 seconds each. The deck is **4:3 (1440×1080)** as SFP requires; it letterboxes cleanly on any screen. Core is **23 slides**.
+Deck: open `index.html` in Chrome. `F` = fullscreen (or the **present ⤢** pill, bottom left), `m` = the slide menu (the **☰** button, top left — click any title to jump), `→`/`space` = next, `←` = back, `a` = jump to Q&A appendix, `Home`/`End` = first/last core slide. `↓` (or `n`) = **skip the rest of this slide's sub-steps and move on**, `↑` (or `p`) = back a whole slide; on any stepped slide a faint **`skip parts →`** pill also sits above the slide counter, bottom right, if you would rather click it. Slides 5, 6, 8, 9, 11, 12, 13, and 15 are **click-throughs** (appendix 1 too); slide 6 auto-plays its first S-move on one press. Slides carry almost no words by design — **you** are the words. One idea per slide, ~50 seconds each. The deck is **4:3 (1440×1080)** as SFP requires; it letterboxes cleanly on any screen. Core is **22 slides**.
 
 **Logistics (Thu Aug 20):** your talk is at **1:20 PM, first block** — pick up your name tag in the **Jorgensen lobby by 12:30 PM**. Find the room beforehand. Own laptop; projector, laser pointer, and wireless advancer are provided. Practice one advance with the clicker before the block starts. Format: **15 minutes + 2–3 min Q&A**. The core script below plays at ~15.
 
@@ -32,16 +32,18 @@ Rest of the memorized minute. Point at the kicker: X is x-inverse, Y is y-invers
 
 > Multiply: both relators, then r₁ becomes r₁ r₂. xy · Yx, yY cancel, r₁ is xx. ⟨ x, y | xx, Yx ⟩. Repeat freely — the group never changes.
 
-### 5 · An example (2:55) — click through, 4 presses
+### 5 · An example (2:55) — click through, 5 presses
 
 A deliberately small warm-up, not the presentation from slide 2 — that one comes back on slide 6 with S-moves. ⟨ x, y | yX, Xyx ⟩: two relators, five letters, and it dies in **three moves, one of each kind**, in the same order the moves are numbered on slide 4. Each press adds a row and the rows stay, so by the end the whole trivialization is on screen at once. The changed relator is in blue. Watch the presentation physically shrink down the page.
 
 0. "Take ⟨ x, y | yX, Xyx ⟩ — two relators, five letters between them. It is the trivial group: the first relator says y equals x, the second says a conjugate of y is trivial, so y is trivial, so x is."
 1. "Move 1, invert. yX read backwards with every letter flipped is xY. ⟨ x, y | xY, Xyx ⟩."
-2. "Move 2, conjugate. Put x on the left of r₂ and X on the right: x·Xyx·X. The x and X at the front annihilate, and what is left is yxX — the X has rotated round to the back, where it meets the x and cancels too. r₂ is just y. **That is the move worth remembering — conjugation is a rotation, and rotating a word can expose a cancellation you could not see before.** It comes back on the very next slide as the rotate move inside an S-move."
-3. "Move 3, multiply. r₁ times r₂: xY·y, the Y and y cancel, r₁ is x. ⟨ x, y | x, y ⟩. Trivial, in three moves — one invert, one conjugate, one multiply. The group never changed; only the description did."
+2. "Move 2, conjugate. Glue x on the left of r₂ and X on the right — the two orange tiles: x·Xyx·X."
+3. "Now cancel. The x and X at the front annihilate, and what is left is yxX — the X has rotated round to the back, where it meets the x and cancels too. r₂ is just y. **That is the move worth remembering — conjugation is a rotation, and rotating a word can expose a cancellation you could not see before.**" The rotation panel under the row is the same thing in one line: Xyx → yxX, first letter to the back. It comes back on the very next slide as the rotate inside an S-move.
+4. "Move 3, multiply. Glue r₂ onto the back of r₁ — the orange tile: xY·y."
+5. "The Y and y cancel, r₁ is x. ⟨ x, y | x, y ⟩. Trivial, in three moves — one invert, one conjugate, one multiply. The group never changed; only the description did."
 
-If you are tight on time: press straight through and only narrate step 2.
+If you are tight on time: press straight through and only narrate steps 2–3.
 
 ### 6 · One S-move (3:45) — click through, 6 presses
 Alphabet on the tiles: x-family blue, y-family orange, and **inverses are set noticeably larger than their generators** — `X` towers over `x`, `Y` over `y` — so nobody has to judge upper vs lower case from the back of the room. Say "X-inverse" out loud the first time; after that the size does the work. The four labels in the blue frame are *parts of one S-move*, not four S-moves. **The whole first S-move plays on one press.** From step 1, one `→` starts rotate → concatenate → cancel → cyclic-reduce and runs itself for ~15s, then parks on the result; beats 2–5 below are one continuous animation, not four clicks. Talk over it — the notes below are paced to the beats. If you need to stop it, `←` cancels the chain. Rotate: tiles *jump* — leftmost letters hop up and land on the right; the rest slide left. Both relators stay on screen. Ghost tiles are an r₂ *copy* inside the product; the filled r₂ slot never leaves.
@@ -114,21 +116,14 @@ Each panel is scaled to its own greedy bar — mean and median bars are not comp
 
 If tight: click 0→3 and say the Aut in one sentence.
 
-### 14 · ΔL > 0 on 26.5% of paths (9:20)
-> Define L as the total relator length, r one plus r two. Delta L is the maximum value of L anywhere on the solution path, minus its value at the start. Greedy always expands the shortest presentation first, so it drives L down. Against it, PPO-SUB-DRT: the dual-ring transformer policy from the Two-Hump paper, decoded with a beam. On the twelve thousand six hundred seventy presentations both methods solved: on seventy-three and a half percent of greedy's paths, delta L is zero — L never exceeds its starting value. That is the tall bar. On the remaining twenty-six and a half percent, delta L is strictly positive: greedy still finished, but only after the two relators together became longer than they began. PPO admits much larger increases — delta L of eleven or more on one thousand one hundred seventy-three presentations, against nine for greedy — and that is why its paths are shorter. It finds a shorter path fifty-seven and a half percent of the time, ties thirty-one percent, and loses twelve percent; twenty-seven percent fewer moves overall. Where delta L is eleven or more it saves eighteen moves. So length alone is not a sufficient guide: some solutions require delta L greater than zero.
-
-Every bar carries its count now, so you can read the length increase straight off the slide: greedy 9,316 / 1,487 / 1,286 / 572 / 9 against PPO 5,109 / 2,058 / 2,283 / 2,047 / 1,173. Both columns sum to 12,670.
-
-One thing to be straight about if asked: the two arms don't spend the same currency. Greedy counts nodes explored; PPO decodes a beam of width 1,024 (the only number left in the footnote) over at most a hundred and fifty steps. There is no like-for-like nodes-explored number for this arm — the comparison here is path length.
-
-### 15 · A better heuristic: 221 → 39 (10:00)
+### 14 · A better heuristic: 221 → 39 (9:20)
 > So we put structure into the ranking. Instead of ordering moves by length alone, we rank by length plus twenty times S plus two times the knot count. Then we validated at scale: seventy thousand seven hundred twenty-three distinct starting presentations, both rankings, out to a budget of a hundred thousand nodes. At ten thousand, plain length still has eight hundred and thirty-one unsolved and the new heuristic two hundred and fifty-nine. Run both out to a hundred thousand: length leaves 221, the heuristic 39. Five times fewer, and it never loses a presentation length could solve. In the hardest bin it turns 95 solves into 277. *(this is your headline — slow down)*
 
 The x axis is a log node budget — the four points are the run's own checkpoints, ten, twenty-five, fifty and a hundred thousand. The +182 −0 flips panel is gone from the slide; if someone asks whether the new heuristic ever loses one, the answer is still no — 182 gained, none lost.
 
 Say the path-length line out loud rather than let someone find it: **23.5 → 26.6, so the proofs get about three moves longer**. That is the trade and it is a good one — you are buying five times fewer unsolved and half the nodes with three extra moves. If pushed: length-only search optimises the thing it is measured on, so of course it wins on path; S and MK buy *reachability*, not brevity.
 
-### 16 · Abelian mass heuristic (10:50) — click through, 3 steps
+### 15 · Abelian mass heuristic (10:10) — click through, 3 steps
 
 Two columns. On the left, **step 0** is mass itself — the formula and a worked example, set large — and **step 1** adds the tie-break chain under it. **Step 2** fills the right column with the two bars and the 7.6×.
 
@@ -136,17 +131,17 @@ Two columns. On the left, **step 0** is mass itself — the formula and a worked
 
 The rule is a **chain, not one key**, and the second line on the slide says why. Abelian mass is an integer, so it ties constantly: on the 60-presentation study it leaves rank 1 tied on **51 of 60** — meaning on most of the deck mass does not pick the start at all, the arbitrary order of the z-words does. Break those ties by **total length** and it drops to **3**; add **S** as the third key and it drops to **1**. That chain, `abel → length → S`, is the deployed arm: 420,426 nodes. Mass alone, tie-broken at random, costs 458,688 — so the tie-breakers are worth about 8% of the node bill, and much more than that in honesty. (For contrast: length as the *first* key ties on 14 and solves 633/640, not 640.)
 
-### 17 · Two letters away from solved (11:35)
+### 16 · Two letters away from solved (10:55)
 > This is the famous test case, Akbulut–Kirby three. The top presentation? Our solver reduces it in twelve moves. Now flip just these two letters — *(point at the orange tiles)* — and you get AK(3). No human, no computer, has ever solved it. Nobody's proven it impossible either. It has been sitting there since 1985, two letters away from solved. *(pause — this is your best moment; let the room feel it)*
 
 This slide used to sit at position 6, before anyone knew what the solver was. It lands harder here: the room has just watched you solve all 640, so "twelve moves" means something and "never solved" costs something. It is also the on-ramp to slide 18 — say the last line, then walk straight into the wall.
 
-### 18 · Still unsolved (12:25)
+### 17 · Still unsolved (11:45)
 > Now the honest slide. The 124 hard classes — and AK(3). The full change-of-variables sweep, fifty thousand nodes on every class: zero of a hundred and twenty-four. What the iterative loop *did* buy is a better starting point. Running change of variables repeatedly, each step keeping the shorter representative, reduced thirty-nine of the hundred and twenty-four — thirty-six of those from the µ-ladder, which drove the total µ from seven hundred eighty-nine down to six hundred ninety-nine. So we start those thirty-nine from strictly shorter presentations. And from those shorter starts the search still floors at total length thirteen, one above the line where stable triviality is known. Five hundred sixty-seven million nodes, a hundred and eighty-two hours, zero solved. We didn't break the wall. We mapped it precisely — and knowing exactly where a wall is, is how walls eventually come down.
 
 Two rows only now; the stable-AC, orbit-ladder and rank-4-and-5 rows are cut. Numbers, if pressed: 39 reduced out of 124, 36 by the µ-ladder (`mu_ladder_r256_b64`, 2–9 hops each, mean µ drop 2.5) and 3 from an external length table; total letters across all 124 fall 2,446 → 2,356. The point of the second row is that the reduction is real and the floor is unmoved.
 
-### 19 · Two ideas solved all 640 (13:15)
+### 18 · Two ideas solved all 640 (12:35)
 > So: two ideas. A heuristic that reads structure, not just length. A starting point chosen by arithmetic, not luck. Together they made everything solvable cheap — and they compressed sixty years of mystery into 124 sharply-defined problems, two attractor floors, twenty-one moves apart. The question we leave with: these moves clearly aren't enough — what *moves the floor*?
 
 The chart is deliberately **relative**: each bar is that idea’s cost divided by its own plain-greedy control, because the two ideas were validated on different benchmarks and their raw numbers do not share an axis. The heuristic is the 70,723 AC19 Aut orbits, scored on the 70,502 both arms solve: 563.3 → 263.2 nodes (0.47×), 23.5 → 26.6 path (1.13×). The CoV picker is all 640 Miller–Schupp: 4,963 → 657 mean nodes (0.13×, the 7.6× the slide quotes), median path 9 → 7 (0.78×). Greedy’s 3,176,297 total is at budget 1,000,000, where all 640 finally solve; the CoV’s 420,426 is at 100,000.
@@ -155,7 +150,7 @@ The chart is deliberately **relative**: each bar is that idea’s cost divided b
 
 **If asked why the heuristic isn’t on the 640:** it was never run there. Its validation set is AC19; the 640 census varies the *start* (abelian mass, shortest pair) over plain-greedy search. Running the heuristic across all 640 is the obvious next experiment.
 
-### 20 · What comes next (13:55)
+### 19 · What comes next (13:15)
 
 Two lines on the screen, nothing else. Everything below is spoken, not shown.
 
@@ -163,16 +158,16 @@ Two lines on the screen, nothing else. Everything below is spoken, not shown.
 
 **If asked why PPO and not the search you already have:** the search is only as good as the ordering you hand it, and every ordering here was hand-picked; a policy can learn one. **If asked whether PPO has been tried on AC:** yes — the Two-Hump paper's PPO agent. What is new is the reward and the start-state distribution, both of which came out of this summer's census. **This slide is the first thing to cut if you are over.**
 
-### 21 · Thank you (14:25)
+### 20 · Thank you (13:45)
 > Thank you to Professor Gukov and the Math AI Group, and to Lucas Fagan, Giorgi Butbaia, and Michele Tarquini who mentored me all summer. I'm happy to take questions.
 
 The slide also carries a **Claude** line under the mentors. You do not have to read it; one clause is enough if you want to — "and Claude, which paired with me on the search code, the figures, and this deck."
 
-### 22 · Questions
+### 21 · Questions
 
 One word on the screen. Say nothing; take the first question.
 
-### 23 · Feedback QR (14:45)
+### 22 · Feedback QR (14:05)
 Advance to it as you invite questions and **leave it up for the whole Q&A** — the audience scans it while you answer. Nothing to say beyond "there's a QR code if you'd like to leave feedback."
 
 **Total: ~14:45.** If the click-through ran long, you are already into overtime — skip the QR line and go straight to questions with the QR up.
@@ -187,11 +182,11 @@ Advance to it as you invite questions and **leave it up for the whole Q&A** — 
 | 5:05 | starting slide 8 (stable AC) |
 | 6:35 | starting slide 10 (640 + 550) |
 | 7:50 | starting slide 12 (subset-60) |
-| 10:00 | starting slide 15 (better heuristic) |
-| 11:35 | starting slide 17 (AK(3)) |
-| 13:15 | starting slide 19 (takeaway) |
+| 9:20 | starting slide 14 (better heuristic) |
+| 10:55 | starting slide 16 (AK(3)) |
+| 12:35 | starting slide 18 (takeaway) |
 
-Running long? Cuts, in order: skip-click the example (straight to the end); skip-click slide 6 (0→2→5→8); one sentence on slide 7 (14 = 4); skip-click slide 8 (straight to Lemma 11, then its example); skip-click slide 9 (0→3); one sentence on slide 10 (1,190 = 640 + 550); **drop slide 11 entirely** (cost of a CoV — it is the newest and the most droppable, and its point survives as one sentence on slide 16); cut slide 12 to step 1 only (skip the bins); skip-click slide 13 (0→3); drop the hard-bin sentence on 15; compress mass to "rank by letter-surplus, 640 at rank one"; cut slide 20 to one sentence. **Never cut slide 17** — AK(3) is the emotional centre of the talk.
+Running long? Cuts, in order: skip-click the example (straight to the end); skip-click slide 6 (0→2→5→8); one sentence on slide 7 (14 = 4); skip-click slide 8 (straight to Lemma 11, then its example); skip-click slide 9 (0→3); one sentence on slide 10 (1,190 = 640 + 550); **drop slide 11 entirely** (cost of a CoV — it is the newest and the most droppable, and its point survives as one sentence on slide 15); cut slide 12 to step 1 only (skip the bins); skip-click slide 13 (0→3); drop the hard-bin sentence on 14; compress mass to "rank by letter-surplus, 640 at rank one"; cut slide 19 to one sentence. **Never cut slide 16** — AK(3) is the emotional centre of the talk.
 
 ## Stretch material (only if your session runs generous)
 
