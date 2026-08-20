@@ -1074,7 +1074,7 @@
       's01-title', 's02-nothing', 's04-conjecture', 's03-moves', 's03b-example', 's06-smove',
       's06b-rotate', 's08-stable', 's12-cov', 's10-blocks', 's12c-coinflip', 's12b-subset60', 's09-funnel',
       's11-compass', 's13-mass', 's05-ak3', 's14-wall', 's15-takeaway', 's15b-next', 's16-ack', 's16b-questions', 's17-qr',
-      'a1-asrun', 'a2-path', 'a3-cap', 'a4-beam', 'a5-relabel', 'a6-timeline', 'a7-trivial'
+      'a1-asrun', 'a2-path', 'a3-cap', 'a4-beam', 'a5-relabel', 'a6-timeline', 'a7-trivial', 'a8-mass-limits'
     ],
     APPENDIX_START: 22   /* index into ORDER where Q&A appendix begins */
   };
@@ -1367,13 +1367,35 @@
     if (jump) setStep(jump, Math.max(0, Math.min(stepMax(jump), stepQ)));
   }
 
-  /* pause everything when printing */
-  window.addEventListener('beforeprint', function () {
+  /* ---- pdf backup: keep every sub-step, one page each, in slide order ----
+     A stepped slide's sub-steps mostly *replace* each other rather than stack,
+     so a single flattened page would overlap them into mush. Instead each slide
+     is expanded in place into one page per sub-step, so nothing is dropped —
+     that is the worst case the printed deck has to survive. */
+  var printExpanded = false;
+  function expandForPrint() {
+    if (printExpanded) return;
+    printExpanded = true;
     slides.forEach(function (s) {
       setAnimations(s, false);
       var el = s.querySelector('[data-steps]');
-      if (el) setStep(el, stepMax(el));
+      if (!el) return;
+      var max = stepMax(el);
+      for (var n = 0; n <= max; n++) {
+        var c = s.cloneNode(true);
+        c.classList.add('active');
+        c.querySelector('[data-steps]').setAttribute('data-step', String(n));
+        s.parentNode.insertBefore(c, s);
+      }
+      s.parentNode.removeChild(s);
     });
+  }
+  if (/[?&]print\b/.test(location.search)) expandForPrint();
+
+  /* pause everything when printing */
+  window.addEventListener('beforeprint', function () {
+    expandForPrint();
+    slides.forEach(function (s) { setAnimations(s, false); });
   });
 })();
 </script>

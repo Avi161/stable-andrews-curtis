@@ -241,7 +241,7 @@ DECK.register('s12b-subset60', `
 
 DECK.register('s12c-coinflip', `
 <div class="step-root" data-steps="1" data-step="0">
-  <header><h1>Cost of a change of variables</h1><div class="kicker">66 presentations · 45 CoVs · budget 10,000</div></header>
+  <header><h1>Cost of a change of variables</h1><div class="kicker">60 presentations · 45 CoVs · budget 10,000</div></header>
   <div class="viz"><svg viewBox="0 0 1600 760" preserveAspectRatio="xMidYMid meet" font-family="Figtree" fill="#191813">
 
     <line x1="470.0" y1="96" x2="470.0" y2="616" stroke="#191813" stroke-opacity="0.07" stroke-width="1"/>
@@ -1666,5 +1666,31 @@ DECK.register('a7-trivial', `
     <text x="800" y="510" text-anchor="middle" font-family="Figtree" font-weight="600" font-size="34" fill="#191813">the group is 1</text>
     <text x="800" y="562" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="26" fill="#191813" fill-opacity="0.55">AC forbids the helper letter</text>
     <text x="800" y="640" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="24" fill="#E05B2B">AK(3) is stably trivial · still no AC path</text>
+  </svg></div>
+`);
+
+DECK.register('a8-mass-limits', `
+  <header><h1>Appendix &middot; what abelian mass does not do</h1><div class="kicker">60 presentations &middot; ~109 CoVs each &middot; budget 10,000</div></header>
+  <div class="viz"><svg viewBox="0 0 1600 760" preserveAspectRatio="xMidYMid meet" font-family="Figtree">
+    <text x="90" y="130" font-family="IBM Plex Mono, monospace" font-size="34" fill="#2B54C4" fill-opacity="0.55">1</text>
+    <text x="134" y="130" font-family="Figtree" font-weight="600" font-size="34" fill="#191813">rank one presentation&rsquo;s own candidates</text>
+    <text x="134" y="172" font-family="IBM Plex Mono, monospace" font-size="24" fill="#191813" fill-opacity="0.40">AUC 0.922 picks solvers from non-solvers &middot; positive on 52 / 52</text>
+    <text x="1510" y="134" text-anchor="end" font-family="Figtree" font-weight="700" font-size="52" fill="#2B54C4" letter-spacing="-0.02em">&rho; +0.81</text>
+
+    <line x1="90" y1="236" x2="1510" y2="236" stroke="#191813" stroke-opacity="0.14" stroke-width="1.5"/>
+
+    <text x="90" y="320" font-family="IBM Plex Mono, monospace" font-size="34" fill="#E05B2B" fill-opacity="0.55">2</text>
+    <text x="134" y="320" font-family="Figtree" font-weight="600" font-size="34" fill="#191813">screen which presentation to attack</text>
+    <text x="134" y="362" font-family="IBM Plex Mono, monospace" font-size="24" fill="#191813" fill-opacity="0.40">pooled over 6,722 rows &middot; length reads +0.46 here and is the wrong key &mdash; Simpson&rsquo;s paradox</text>
+    <text x="1510" y="324" text-anchor="end" font-family="Figtree" font-weight="700" font-size="52" fill="#E05B2B" letter-spacing="-0.02em">r +0.11</text>
+
+    <line x1="90" y1="426" x2="1510" y2="426" stroke="#191813" stroke-opacity="0.14" stroke-width="1.5"/>
+
+    <text x="90" y="510" font-family="IBM Plex Mono, monospace" font-size="34" fill="#E05B2B" fill-opacity="0.55">3</text>
+    <text x="134" y="510" font-family="Figtree" font-weight="600" font-size="34" fill="#191813">pick the one z to run</text>
+    <text x="134" y="552" font-family="IBM Plex Mono, monospace" font-size="24" fill="#191813" fill-opacity="0.40">a median of 6 candidates tie at the minimum &middot; best-of-3 reaches 52 / 60, the oracle set</text>
+    <text x="1510" y="514" text-anchor="end" font-family="Figtree" font-weight="700" font-size="52" fill="#E05B2B" letter-spacing="-0.02em">47.4 / 60</text>
+
+    <text x="800" y="672" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="24" fill="#191813" fill-opacity="0.40">it ranks inside a presentation &mdash; it does not screen between them, and it shortlists rather than picks</text>
   </svg></div>
 `);
