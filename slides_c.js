@@ -1071,8 +1071,6 @@ DECK.register('s15b-next', `
     <text x="300" y="439" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="28" fill="#FAF9F6">2</text>
     <text x="372" y="446" font-family="Figtree" font-weight="700" font-size="60" fill="#191813" letter-spacing="-0.02em">Improved Benchmark besides MS1190</text>
 
-    <line x1="70" y1="596" x2="1530" y2="596" stroke="#191813" stroke-opacity="0.10" stroke-width="1.4"/>
-    <text x="800" y="664" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="26" fill="#191813" fill-opacity="0.7">both aim at the same target &#8212; the <tspan fill="#E05B2B" fill-opacity="1">124 unsolved classes</tspan>, and <tspan fill="#E05B2B" fill-opacity="1">AK(3)</tspan></text>
 
   </svg></div>
 `);
@@ -1086,7 +1084,7 @@ DECK.register('s16-ack', `
       <div style="font-family:Figtree,sans-serif;font-weight:600;font-size:40px;letter-spacing:-0.02em;line-height:1.25;color:#191813;">Lucas Fagan<br>Giorgi Butbaia<br>Michele Tarquini</div>
       <div class="mono dim" style="font-size:26px;margin:8px 0 0;">mentors · Math AI Group · Caltech</div>
       <div style="font-family:Figtree,sans-serif;font-weight:600;font-size:40px;letter-spacing:-0.02em;line-height:1.2;color:#191813;margin-top:34px;">Claude</div>
-      <div class="mono dim" style="font-size:26px;margin:8px 0 0;">Anthropic &#183; search code &#183; figures &#183; this deck</div>
+      <div class="mono dim" style="font-size:26px;margin:8px 0 0;">Anthropic</div>
       <svg viewBox="0 0 160 160" width="160" height="160" style="margin-top:10px;" preserveAspectRatio="xMidYMid meet" fill="none" aria-hidden="true">
           <defs>
             <path id="ka0" fill="none"><animate attributeName="d" values="M146 81.9 C145.6 80.8 144.7 79.5 143.4 78.4;M146 81.9 C145.6 80.8 144.7 79.5 143.4 78.4;M146 81.9 C145.6 80.8 144.7 79.5 143.4 78.4;M146 81.9 C145.6 80.8 144.7 79.5 143.4 78.4;M146 82.1 C145.6 81.1 144.8 80 143.5 79.1;M145.9 82.8 C145.6 82.2 144.9 81.6 143.9 81.2;M145.9 83.7 C145.6 83.8 145 83.7 144.1 83.8;M145.8 84.7 C145.6 85.4 145 86 144.3 86.7;M145.8 85.3 C145.5 86.6 145.1 87.9 144.5 89.2;M145.4 86.1 C145.2 87.9 144.8 89.6 144.4 91.3;M145.6 86.6 C145.4 88.3 145.1 90 144.7 91.7;M145.6 86.8 C145.4 88.5 145.1 90.3 144.8 92.1;M145.7 86.8 C145.5 88.6 145.2 90.3 144.9 92.1;M145.7 86.8 C145.5 88.6 145.2 90.3 144.9 92.1;M145.7 86.8 C145.5 88.6 145.2 90.3 144.9 92.1;M145.7 86.8 C145.5 88.6 145.2 90.3 144.9 92.1;M145.7 86.8 C145.5 88.6 145.2 90.3 144.9 92.1;M145.7 86.8 C145.5 88.6 145.2 90.3 144.9 92.1;M145.6 86.6 C145.4 88.3 145.1 90 144.7 91.7;M145.7 85.6 C145.4 87.1 145.1 88.6 144.6 90.1;M145.8 84.7 C145.6 85.4 145 86 144.3 86.7;M145.9 83.2 C145.6 83 144.9 82.6 144 82.4;M146 82.1 C145.6 81.1 144.8 80 143.5 79.1;M146 81.9 C145.6 80.8 144.7 79.5 143.4 78.4;M146 81.9 C145.6 80.8 144.7 79.5 143.4 78.4" keyTimes="0;0.042;0.083;0.125;0.167;0.208;0.25;0.292;0.333;0.375;0.417;0.458;0.5;0.542;0.583;0.625;0.667;0.708;0.75;0.792;0.833;0.875;0.917;0.958;1" dur="16s" repeatCount="indefinite"/></path>
