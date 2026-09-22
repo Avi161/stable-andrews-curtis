@@ -157,7 +157,7 @@
     s += fbox(1300, 190, 270, 110, '(x, y)', ['AC path, replayed by', 'an independent verifier'], { done: true });
     s += '<rect x="20" y="420" width="1560" height="250" rx="16" fill="none" stroke="rgba(25,24,19,0.18)" stroke-dasharray="8 7"/>';
     s += t(120, 448, 'D · best-first search with whatever is left of the 1,000 units', { size: 17, op: 0.6 });
-    s += fbox(40, 480, 280, 100, 'pop the shortest', ['smallest |r₁| + |r₂| first']);
+    s += fbox(40, 480, 280, 100, 'take the shortest', ['off the queue:', 'smallest |r₁| + |r₂|']);
     s += fdia(468, 530, 200, 110, 'visited?', 'this search');
     s += fbox(590, 480, 330, 100, 'expand', ['AC substitutions', '+ 4 Nielsen maps']);
     s += fbox(960, 480, 240, 100, 'canonical form', ['8 signed permutations']);
@@ -174,13 +174,16 @@
     s += fpath(id, 'M568 530 H584') + flab(577, 508, 'no');
     s += fpath(id, 'M920 530 H954') + fpath(id, 'M1200 530 H1219');
     s += fpath(id, 'M1370 470 V306', { blue: true }) + flab(1390, 400, 'yes', { anchor: 'start', blue: true });
-    s += fpath(id, 'M1370 590 V640 H180 V586') + flab(900, 632, 'no — queue the children, pop again');
+    s += fpath(id, 'M1370 590 V640 H180 V586') + flab(900, 632, 'no — queue the children, take the next');
     s += fpath(id, 'M468 585 V640', { dash: true }) + flab(488, 614, 'yes: skip', { anchor: 'start' });
     s += t(40, 250, 'BS cascade (6 Sep) = the smaller version:', { size: 20, op: 0.6 });
     s += t(40, 278, 'A and C, then a search', { size: 20, op: 0.6 });
     s += t(40, 306, 'Nielsen search adds B and checks B, C', { size: 20, op: 0.6 });
     s += t(40, 334, 'on every child', { size: 20, op: 0.6 });
-    s += foot('one budget of 1,000 units per row, shared by all stages · a unit = one popped state, one Nielsen map, or one substitution');
+    var CR = P.rank2_census || {};
+    s += t(800, 697, 'solved within 1,000 units:  AC19 Aut-min ' + k(CR.solved) + ' / ' + k(CR.rows) + '  ·  MS-640 640 / 640  ·  subset-60 ' + S2.solved + ' / ' + S2.rows,
+      { sans: true, weight: 600, size: 22, anchor: 'middle', fill: BLUE });
+    s += foot('a unit = one presentation taken off the queue, one Nielsen map, or one substitution · one budget per row, shared by all stages');
     add('p02b-flow', 'How Nielsen search works', '1,000 units per row', s);
   })();
 
