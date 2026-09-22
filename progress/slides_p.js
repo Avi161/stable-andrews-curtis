@@ -148,7 +148,7 @@
     s += fbox(30, 60, 190, 90, 'presentation', ['(r₁, r₂)']);
     s += fbox(270, 60, 330, 90, 'A · Whitehead descent', ['apply a Nielsen map', 'while it shortens']);
     s += fdia(770, 105, 300, 120, 'B · primitive?', 'a letter used once');
-    s += fbox(970, 60, 270, 90, 'substitute it away', ['one move per letter'], { tint: true, stat: st('B') });
+    s += fbox(970, 60, 270, 90, 'substitute it away', ['r = x^±1 yⁿ  or  xᵐ y^±1'], { tint: true, stat: st('B') });
     s += fdia(770, 300, 300, 120, 'C · BS-shaped?', 'g^a h^p g^-a h^q');
     s += fbox(970, 255, 270, 90, 'pinch cascade', ['one move per pinch', 'generalises BS(1,2)'], { tint: true, stat: st('C') });
     s += fbox(1300, 190, 270, 110, '(x, y)', ['AC path, replayed by', 'an independent verifier'], { done: true });
@@ -159,7 +159,7 @@
     s += fbox(590, 480, 330, 100, 'expand', ['AC substitutions', '+ 4 Nielsen maps']);
     s += fbox(960, 480, 240, 100, 'canonical form', ['8 signed permutations']);
     s += fdia(1370, 530, 290, 120, 'child finishes?', 'test B and C');
-    s += t(1560, 448, st('D'), { size: 17, anchor: 'end', fill: BLUE });
+    s += t(1330, 448, st('D'), { size: 17, anchor: 'end', fill: BLUE });
     s += fpath(id, 'M220 105 H264') + fpath(id, 'M600 105 H614');
     s += fpath(id, 'M920 105 H964', { blue: true }) + flab(942, 92, 'yes', { blue: true });
     s += fpath(id, 'M1240 105 H1435 V184', { blue: true });
