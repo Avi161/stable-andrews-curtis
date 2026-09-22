@@ -156,7 +156,7 @@
     /* row 3: one search, one budget */
     s += '<rect x="20" y="420" width="1560" height="250" rx="16" fill="none" stroke="rgba(25,24,19,0.18)" stroke-dasharray="8 7"/>';
     s += t(120, 448, 'one best-first search · one budget of 1,000 units · no hash table, no lookup table', { size: 17, op: 0.6 });
-    s += fbox(40, 480, 280, 100, 'pop the shortest', ['total length', '+5 per extra generator']);
+    s += fbox(40, 480, 280, 100, 'pop the shortest', ['total length', '(+5 if a generator was added)']);
     s += fdia(468, 530, 200, 110, 'seen?', 'sorted list');
     s += fbox(590, 480, 330, 100, 'expand', ['substitutions · 4 Nielsen maps', 'define / eliminate']);
     s += fbox(960, 480, 240, 100, 'canonical form', ['8 signed permutations']);
@@ -175,8 +175,8 @@
     s += fpath(id, 'M1370 470 V306', { blue: true }) + flab(1390, 400, 'yes', { anchor: 'start', blue: true });
     s += fpath(id, 'M1370 590 V640 H180 V586') + flab(1100, 632, 'no — queue the children, pop again');
     s += fpath(id, 'M468 585 V640', { dash: true }) + flab(488, 614, 'yes: skip', { anchor: 'start' });
-    s += foot('two frontiers: rank two by length; rank three or four by length + 5 per extra generator, served at most half as often · ' +
-      'every step is recorded; basis changes are transported back, so the path is an ordinary AC path');
+    s += foot('define adds a generator (rank 3 or 4) and eliminate removes one · such states score +5 letters per extra generator ' +
+      'and are explored at most half as often, so the solver leaves rank two only when it clearly pays');
     add('p02b-flow', 'How the hash-free solver works', 'one fixed procedure · 14 Sep', s);
   })();
 
