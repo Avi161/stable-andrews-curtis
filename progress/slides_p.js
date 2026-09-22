@@ -587,37 +587,6 @@
   })();
 
 
-  /* =====================================================================
-     p18  remove one part: what breaks (same machine)
-     ===================================================================== */
-  (function () {
-    function arm(set, name) { return R[set + '_' + name] || {}; }
-    var fin = arm('ms640', 'F'), f60 = arm('s60', 'F');
-    var rows = [
-      { part: 'nothing — the solver', key: 'F', final: true },
-      { part: 'Nielsen edges', key: 'F-nonielsen' },
-      { part: 'finishing check on every child', key: 'F-nogates' },
-      { part: 'signed permutations', key: 'F-noperm' },
-      { part: 'Whitehead descent (A)', key: 'F-nodescent' },
-      { part: 'length order → S20_MK2 order', key: 'F-s20' }
-    ];
-    var cols = [620, 900, 1180, 1470], s = '';
-    ['removed', 'MS-640 search', 'MS-640 solved', 'subset-60 solved'].forEach(function (h, i) {
-      s += t(i ? cols[i] : 80, 100, h, { size: 20, op: 0.45, anchor: i ? 'end' : 'start' });
-    });
-    rows.forEach(function (row, i) {
-      var y = 170 + i * 76, ms = arm('ms640', row.key), sb = arm('s60', row.key);
-      var slow = ms.search_wall_s > fin.search_wall_s * 1.5, lost = ms.solved < fin.solved, lost60 = sb.solved < f60.solved;
-      var tint = row.final ? BLUE : null;
-      s += t(80, y, row.part, { sans: true, weight: 600, size: 30, fill: tint || INK });
-      s += t(cols[1], y, f1(ms.search_wall_s) + ' s', { size: 28, anchor: 'end', fill: tint || (slow ? OR : INK) });
-      s += t(cols[2], y, ms.solved + ' / 640', { size: 28, anchor: 'end', fill: tint || (lost ? OR : INK) });
-      s += t(cols[3], y, sb.solved + ' / 60', { size: 28, anchor: 'end', fill: tint || (lost60 ? OR : INK) });
-      s += l(80, y + 28, 1470, y + 28, INK, { op: 0.1, sw: 1 });
-    });
-    s += foot('same machine, one core, 1,000 units · orange = worse than the solver · signed permutations matter on the hardest AC19 rows (673 → 696 of the 727 leftovers)');
-    add('p18-ablation', 'Take one part out: what breaks', 'same machine · one core', s);
-  })();
 
   /* =====================================================================
      p19  path length in AC moves

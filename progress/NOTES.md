@@ -33,6 +33,6 @@ where stated); signed permutations are free.
     (peak 25 → 77 on ac19x_21044). That is why these rows were unsolved at 10M: at some point the relator length has
     to go far above the current state, and a fixed-basis, length-ordered search never goes there. Nielsen edges let the
     Nielsen search walk around the spike instead.
-16. **Nine rows.** Fixed-basis search failed at 10M nodes; Nielsen search needs 98–665 units.
-18. **Ablation.** Same machine, one core, the rank-two solver with one part removed.
+16. **Nine rows.** Fixed-basis search failed at 10M nodes; Nielsen search needs 116–550 units (a unit = one popped state, one Nielsen map, or one substitution).
+
 19. **Path length.** AC moves = substitutions + Nielsen maps; not a lower bound.
