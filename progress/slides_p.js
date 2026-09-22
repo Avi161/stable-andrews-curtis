@@ -73,6 +73,36 @@
   function logx(v, lo, hi, x0, x1) { return x0 + (Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo)) * (x1 - x0); }
   function tickLabel(v) { return v >= 1e6 ? (v / 1e6) + 'M' : v >= 1e3 ? (v / 1e3) + 'k' : String(v); }
 
+
+  /* ---------- flowchart pieces (talk style: outlined boxes, tinted diamonds, filled finish) ---------- */
+  function fdefs(id) {
+    return '<defs><marker id="' + id + '-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">' +
+      '<path d="M0 0 L10 5 L0 10 z" fill="#6b6a64"/></marker>' +
+      '<marker id="' + id + '-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">' +
+      '<path d="M0 0 L10 5 L0 10 z" fill="' + BLUE + '"/></marker></defs>';
+  }
+  function fbox(x, y, w, h, title, sub, o) {
+    o = o || {};
+    var fill = o.done ? BLUE : (o.tint ? 'rgba(43,84,196,0.08)' : '#fff'), stroke = o.done || o.tint ? BLUE : 'rgba(25,24,19,0.25)';
+    var tc = o.done ? '#fff' : INK, cx = x + w / 2, subs = [].concat(sub || []);
+    var ty = y + h / 2 + (subs.length ? -8 - 10 * (subs.length - 1) : 8);
+    var out = '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="12" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1.6"/>';
+    out += t(cx, ty, title, { sans: true, weight: 600, size: 22, anchor: 'middle', fill: tc });
+    subs.forEach(function (sl, i) { out += t(cx, ty + 26 + i * 21, sl, { size: 16, anchor: 'middle', fill: o.done ? '#fff' : INK, op: o.done ? 0.9 : 0.6 }); });
+    if (o.stat) out += t(x + w, y + h + 22, o.stat, { size: 17, anchor: 'end', fill: BLUE });
+    return out;
+  }
+  function fdia(cx, cy, w, h, l1, l2) {
+    return '<path d="M' + (cx - w / 2) + ' ' + cy + ' L' + cx + ' ' + (cy - h / 2) + ' L' + (cx + w / 2) + ' ' + cy + ' L' + cx + ' ' + (cy + h / 2) + ' Z" fill="rgba(43,84,196,0.08)" stroke="' + BLUE + '" stroke-width="1.6"/>' +
+      t(cx, cy + (l2 ? -3 : 7), l1, { sans: true, weight: 600, size: 19, anchor: 'middle' }) + (l2 ? t(cx, cy + 20, l2, { size: 15, anchor: 'middle', op: 0.6 }) : '');
+  }
+  function fpath(id, d, o) {
+    o = o || {};
+    return '<path d="' + d + '" fill="none" stroke="' + (o.blue ? BLUE : '#6b6a64') + '" stroke-width="1.8"' + (o.dash ? ' stroke-dasharray="7 6"' : '') +
+      ' marker-end="url(#' + id + (o.blue ? '-b' : '-a') + ')"/>';
+  }
+  function flab(x, y, s0, o) { o = o || {}; return t(x, y, s0, { size: 16, anchor: o.anchor || 'middle', fill: o.blue ? BLUE : INK, op: o.blue ? 1 : 0.55 }); }
+
   var H = P.head || {}, R = P.runs || {}, S = P.s60 || {}, BS = P.bs || {};
   var msNew = R.ms640_H_runms640_protocol || {}, msOld = R.ms640_OLDCASCADE_b1000_protocol || {};
   var msNewSearch = msNew.search_wall, msNewBatch = msNew.batch_wall_including_verification;
@@ -107,6 +137,48 @@
     });
     s += foot('one fixed solver · 1,000 units per row · no hash table, no lookup table · every certificate replayed by an independent verifier');
     add('p02-everything', 'Everything solves at 1,000 units', 'hash-free solver · 14 Sep', s);
+  })();
+
+
+  /* =====================================================================
+     p02b  how the hash-free solver works
+     ===================================================================== */
+  (function () {
+    var id = 'pf1', s = fdefs(id);
+    /* row 1: cheap finishing tests */
+    s += fbox(30, 60, 190, 90, 'presentation', ['(r₁, r₂)']);
+    s += fbox(270, 60, 330, 90, 'A · Whitehead descent', ['apply a Nielsen map', 'while it shortens']);
+    s += fdia(770, 105, 300, 120, 'B · primitive?', 'a letter used once');
+    s += fbox(970, 60, 250, 90, 'substitute it away', ['one move per letter'], { tint: true });
+    /* row 2 */
+    s += fdia(770, 300, 300, 120, 'C · BS-shaped?', 'g^a h^p g^-a h^q');
+    s += fbox(970, 255, 250, 90, 'pinch cascade', ['one move per pinch', 'generalises BS(1,2)'], { tint: true });
+    s += fbox(1290, 190, 280, 110, '(x, y)', ['certificate, replayed by', 'an independent verifier'], { done: true });
+    /* row 3: one search, one budget */
+    s += '<rect x="20" y="420" width="1560" height="250" rx="16" fill="none" stroke="rgba(25,24,19,0.18)" stroke-dasharray="8 7"/>';
+    s += t(120, 448, 'one best-first search · one budget of 1,000 units · no hash table, no lookup table', { size: 17, op: 0.6 });
+    s += fbox(40, 480, 280, 100, 'pop the shortest', ['total length', '+5 per extra generator']);
+    s += fdia(468, 530, 200, 110, 'seen?', 'sorted list');
+    s += fbox(590, 480, 330, 100, 'expand', ['substitutions · 4 Nielsen maps', 'define / eliminate']);
+    s += fbox(960, 480, 240, 100, 'canonical form', ['8 signed permutations']);
+    s += fdia(1370, 530, 290, 120, 'child finishes?', 'test B and C');
+    /* arrows */
+    s += fpath(id, 'M220 105 H264') + fpath(id, 'M600 105 H614');
+    s += fpath(id, 'M920 105 H964', { blue: true }) + flab(942, 92, 'yes', { blue: true });
+    s += fpath(id, 'M1220 105 H1430 V184', { blue: true });
+    s += fpath(id, 'M770 165 V234') + flab(790, 205, 'no', { anchor: 'start' });
+    s += fpath(id, 'M920 300 H964', { blue: true }) + flab(942, 287, 'yes', { blue: true });
+    s += fpath(id, 'M1220 300 H1250 V245 H1284', { blue: true });
+    s += fpath(id, 'M770 360 V395 H90 V474') + flab(790, 385, 'no', { anchor: 'start' });
+    s += fpath(id, 'M320 530 H362');
+    s += fpath(id, 'M568 530 H584') + flab(577, 516, 'no');
+    s += fpath(id, 'M920 530 H954') + fpath(id, 'M1200 530 H1219');
+    s += fpath(id, 'M1370 470 V306', { blue: true }) + flab(1390, 400, 'yes', { anchor: 'start', blue: true });
+    s += fpath(id, 'M1370 590 V640 H180 V586') + flab(1100, 632, 'no — queue the children, pop again');
+    s += fpath(id, 'M468 585 V640', { dash: true }) + flab(488, 614, 'yes: skip', { anchor: 'start' });
+    s += foot('two frontiers: rank two by length; rank three or four by length + 5 per extra generator, served at most half as often · ' +
+      'every step is recorded; basis changes are transported back, so the path is an ordinary AC path');
+    add('p02b-flow', 'How the hash-free solver works', 'one fixed procedure · 14 Sep', s);
   })();
 
   /* =====================================================================
@@ -222,6 +294,35 @@
     });
     s += foot('same 60 rows · spent = units charged over all 60 · times: one core, same machine');
     add('p06-s60-arms', get(S, 'greedy10k.solved') + ' → ' + get(S, 's20_10k.solved') + ' → 60 of 60', 'subset-60 · four solvers', s);
+  })();
+
+
+  /* =====================================================================
+     p06b  how the BS cascade works
+     ===================================================================== */
+  (function () {
+    var id = 'pf2', s = fdefs(id), st = P.cascade_ms640_rewrite, st2 = P.cascade_ms640_s40;
+    s += fbox(30, 70, 190, 90, 'presentation', ['(r₁, r₂)']);
+    s += fbox(250, 70, 340, 90, 'normalise', ['Nielsen maps while shorter,', 'then the least signed permutation']);
+    s += fdia(790, 115, 320, 130, 'BS(1,2) relator?', 'b⁻¹ab = a²');
+    s += fbox(990, 70, 300, 90, 'BS(1,2) rewrite', ['push each b through: aᵏ → a²ᵏ', 'one substitution each'], { tint: true, stat: st + ' / 640 finish here' });
+    s += fbox(990, 220, 300, 90, 'one b left: b = aⁿ', ['donor becomes a⁻¹,', 'erase the a’s'], { tint: true });
+    s += fbox(1330, 150, 240, 110, '(x, y)', ['AC certificate,', 'replayed'], { done: true });
+    s += fbox(420, 380, 360, 100, 'search L + 40S', ['4 Nielsen maps as neighbours', 'at most 500 pops'], { stat: st2 + ' / 640 finish here' });
+    s += fdia(1000, 430, 220, 110, 'solved?', '');
+    s += fbox(420, 560, 360, 100, 'search S20_MK2', ['L + 20S + 2MK', 'the rest of the budget'], { stat: '0 / 640' });
+    s += fpath(id, 'M220 115 H244') + fpath(id, 'M590 115 H624');
+    s += fpath(id, 'M950 115 H984', { blue: true }) + flab(967, 102, 'yes', { blue: true });
+    s += fpath(id, 'M1220 160 V214', { blue: true });
+    s += fpath(id, 'M1290 265 H1305 V230 H1324', { blue: true });
+    s += fpath(id, 'M790 180 V300 H600 V374') + flab(810, 250, 'no, or it stalls', { anchor: 'start' });
+    s += fpath(id, 'M780 430 H889');
+    s += fpath(id, 'M1110 430 H1450 V266', { blue: true }) + flab(1180, 418, 'yes', { blue: true });
+    s += fpath(id, 'M1000 485 V520 H600 V554') + flab(1020, 510, 'no', { anchor: 'start' });
+    s += fpath(id, 'M780 610 H1490 V266', { blue: true, dash: true });
+    s += foot('one shared budget of 1,000 units · MS-640: ' + st + ' rows finish in the rewrite, ' + st2 + ' in L + 40S, none reach S20_MK2 · ' +
+      'basis changes are transported back, so every path is an AC path');
+    add('p06b-cascade-flow', 'How the BS cascade works', 'the 6 Sep solver · table-free', s);
   })();
 
   /* =====================================================================
