@@ -135,7 +135,6 @@
       s += r(470, y - 26, 560, 32, INK, { op: 0.08 }) + r(470, y - 26, 560 * frac, 32, BLUE, { op: 0.85 });
       s += t(1545, y, k(row.got) + ' / ' + k(row.of), { sans: true, weight: 700, size: 40, anchor: 'end', fill: BLUE });
     });
-    s += foot('one fixed solver · 1,000 units per row · no hash table, no lookup table · every certificate replayed by an independent verifier');
     add('p02-everything', 'Everything solves at 1,000 units', 'hash-free solver · 14 Sep', s);
   })();
 
