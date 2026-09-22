@@ -215,6 +215,10 @@ def apply_phi(phi, w):
     return cyc_reduce(''.join(m[ch] for ch in w))
 
 
+def names_all(costs):
+    return {r['name'] for r in costs}
+
+
 def get_rows(costs):
     return len({r['name'] for r in costs})
 
@@ -360,6 +364,46 @@ def main():
     P['ladder_full'] = dict(budgets=[100, 1000] + P['ladder_budgets'],
                             greedy=lad['greedy'][:2] + P['ladder_greedy'], s20=lad['s20_mk2'][:2] + P['ladder_s20'],
                             rows=get_rows(costs), check_10k=dict(greedy=lad['greedy'][2], s20=lad['s20_mk2'][2]))
+
+    # ---- per-row nodes and path at the budget where each arm first solves, grouped by difficulty
+    best = {'greedy': {}, 's20_mk2': {}}
+    for r in costs:
+        if r['solved'] == '1':
+            best[r['arm']][r['name']] = (int(r['nodes_explored']), int(r['path_length']))
+    rungs = {'greedy': ['hsearch_ac19_hard100k/ac19_unsolved10k_baseline_b100000_mrl48.jsonl',
+                        'ac19_unescalated/leftovers_1m_greedy_b100000_mrl48.jsonl',
+                        'leftovers_1m/leftovers_1m_greedy_b1000000_mrl48.jsonl',
+                        'ac19_unescalated/leftovers_1m_greedy_b1000000_mrl48.jsonl',
+                        'leftovers_5m/leftovers_5m_greedy_b5000000_mrl64.jsonl',
+                        'ac19_10m/ac19_10m_greedy_b10000000_mrl64.jsonl'],
+             's20_mk2': ['hsearch_ac19_hard100k/ac19_unsolved10k_s20_mk2_b100000_mrl48.jsonl',
+                         'ac19_unescalated/leftovers_1m_s20_mk2_b100000_mrl48.jsonl',
+                         'leftovers_1m/leftovers_1m_s20_mk2_b1000000_mrl48.jsonl',
+                         'leftovers_5m/leftovers_5m_s20_mk2_b5000000_mrl64.jsonl',
+                         'ac19_10m/ac19_10m_s20_mk2_b10000000_mrl64.jsonl']}
+    for arm, files in rungs.items():
+        for f in files:
+            for r in jsonl(X, LB, 'results/heuristic_search/' + f):
+                if r.get('solved') and r['name'] not in best[arm]:
+                    best[arm][r['name']] = (r['nodes_explored'], r['path_length'])
+    both = [n for n in best['greedy'] if n in best['s20_mk2']]
+    edges = [100, 1000, 10000, 100000, 1000000, 5000000, 10000000]
+    bins = []
+    for i, e in enumerate(edges):
+        lo = 0 if i == 0 else edges[i - 1]
+        names = [n for n in both if lo < max(best['greedy'][n][0], best['s20_mk2'][n][0]) <= e]
+        d = dict(lo=lo, hi=e, n=len(names))
+        for arm, key in (('greedy', 'g'), ('s20_mk2', 's')):
+            nd = [best[arm][n][0] for n in names]
+            pl = [best[arm][n][1] for n in names]
+            d[key] = dict(nodes_mean=round(sum(nd) / len(nd), 1), nodes_median=med(nd),
+                          path_mean=round(sum(pl) / len(pl), 1), path_median=med(pl)) if names else None
+        bins.append(d)
+    P['difficulty'] = dict(bins=bins, both=len(both), rows=len(names_all(costs)),
+                           greedy_only=sum(1 for n in best['greedy'] if n not in best['s20_mk2']),
+                           s20_only=sum(1 for n in best['s20_mk2'] if n not in best['greedy']),
+                           unsolved=dict(greedy=len(names_all(costs)) - len(best['greedy']),
+                                         s20=len(names_all(costs)) - len(best['s20_mk2'])))
 
     # ---- originals of the 28 orbits greedy cannot solve at 10M: the same moves from both starting points
     OD = 'results/heuristic_search/ac19_orig_10m'

@@ -537,6 +537,43 @@
   })();
 
   /* =====================================================================
+     p13c  nodes and path by difficulty, rows both arms solve
+     ===================================================================== */
+  (function () {
+    var D = P.difficulty || {}, bins = (D.bins || []).filter(function (b) { return b.n > 0; }), s = '';
+    function lab(b) { return (b.lo ? tickLabel(b.lo) : '0') + '–' + tickLabel(b.hi); }
+    function num(v) { return v >= 1000 ? k(v) : (Math.round(v) === v ? String(v) : v.toFixed(1)); }
+    function pair(x, y, a, b) {
+      return t(x - 16, y, num(a), { size: 22, anchor: 'end', fill: OR }) + t(x, y, '→', { size: 20, anchor: 'middle', op: 0.4 }) +
+        t(x + 16, y, num(b), { size: 22, fill: BLUE });
+    }
+    var cols = [560, 830, 1110, 1390];
+    s += t((cols[0] + cols[1]) / 2, 62, 'nodes explored', { sans: true, weight: 600, size: 24, anchor: 'middle' });
+    s += t((cols[2] + cols[3]) / 2, 62, 'path length · substitution moves', { sans: true, weight: 600, size: 24, anchor: 'middle' });
+    s += l(430, 76, 960, 76, INK, { op: 0.15 }) + l(990, 76, 1520, 76, INK, { op: 0.15 });
+    ['difficulty', 'rows', 'mean', 'median', 'mean', 'median'].forEach(function (h, i) {
+      var x = [60, 360, cols[0], cols[1], cols[2], cols[3]][i];
+      s += t(x, 108, h, { size: 19, op: 0.45, anchor: i === 0 ? 'start' : (i === 1 ? 'end' : 'middle') });
+    });
+    bins.forEach(function (b, i) {
+      var y = 160 + i * 66;
+      s += t(60, y, lab(b) + ' nodes', { sans: true, weight: 600, size: 26 });
+      s += t(360, y, k(b.n), { size: 22, anchor: 'end', op: 0.7 });
+      s += pair(cols[0], y, b.g.nodes_mean, b.s.nodes_mean) + pair(cols[1], y, b.g.nodes_median, b.s.nodes_median);
+      s += pair(cols[2], y, b.g.path_mean, b.s.path_mean) + pair(cols[3], y, b.g.path_median, b.s.path_median);
+      s += l(60, y + 26, 1520, y + 26, INK, { op: 0.08, sw: 1 });
+    });
+    var ly = 160 + bins.length * 66 + 10;
+    s += r(60, ly, 20, 16, OR, { op: 0.85 }) + t(90, ly + 15, 'plain greedy', { size: 20, fill: OR });
+    s += r(280, ly, 20, 16, BLUE, { op: 0.85 }) + t(310, ly + 15, 'S20_MK2', { size: 20, fill: BLUE });
+    s += t(1520, ly + 15, k(D.both) + ' rows solved by both · S20_MK2 alone: ' + D.s20_only + ' · greedy alone: ' + D.greedy_only,
+      { size: 20, anchor: 'end', op: 0.6 });
+    s += foot('difficulty = the larger of the two node counts, so each band holds the rows both arms solve within that budget · ' +
+      'nodes = popped states · caps 48 up to 1M, 64 at 5M and 10M · unsolved at 10M: ' + D.unsolved.greedy + ' / ' + D.unsolved.s20);
+    add('p13c-difficulty', 'Harder rows: far fewer nodes, similar paths', 'AC19 Aut-min · greedy → S20_MK2 · rows both solve', s);
+  })();
+
+  /* =====================================================================
      p14  the originals solve, their Aut-min representatives do not
      ===================================================================== */
   (function () {
