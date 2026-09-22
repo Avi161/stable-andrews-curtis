@@ -183,7 +183,7 @@
     var CR = P.rank2_census || {};
     s += t(800, 697, 'solved within 1,000 units:  AC19 Aut-min ' + k(CR.solved) + ' / ' + k(CR.rows) + '  ·  MS-640 640 / 640  ·  subset-60 ' + S2.solved + ' / ' + S2.rows,
       { sans: true, weight: 600, size: 22, anchor: 'middle', fill: BLUE });
-    s += foot('a unit = one presentation taken off the queue, one Nielsen map, or one substitution · one budget per row, shared by all stages');
+    s += foot('search: one unit per presentation taken off the queue (its children are free) · stages A–C: one unit per Nielsen map tried and per substitution move');
     add('p02b-flow', 'How Nielsen search works', '1,000 units per row', s);
   })();
 
