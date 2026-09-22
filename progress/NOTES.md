@@ -14,8 +14,6 @@ where stated); signed permutations are free.
    79.7 is the conservative count; popped states alone average 7.7.
 5. **Per-row.** Easy rows cost us a little more than greedy (3–12 nodes); the tail is where it wins.
 6. **Four solvers.** Greedy and S20_MK2 at 10,000 nodes; the cascade and the new solver at 1,000 units.
-7. **BS(1,2).** ms622: two Nielsen maps expose y x y⁻¹ = x²; each pinch is one AC substitution; the companion
-   grows to 131 letters, collapses to y = x¹²⁷, and 127 erasures finish.
 8. **Every MS row is BS(n, n+1).** By definition of MS(n, w). 182 are n = 1. The Britton check passes on 342 roots.
 9. **Trivial vs AC-trivial.** Exponent ±1 ⇒ trivial group (Miller–Schupp) for every n; an AC path is compiled
    for n = 1 always, for n > 1 only when every pinch divides. A stall is not a counterexample.

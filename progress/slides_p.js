@@ -297,33 +297,6 @@
 
 
 
-  /* =====================================================================
-     p07  BS(1,2) collapse, ms622
-     ===================================================================== */
-  (function () {
-    var d = get(P, 'ms622.max_rel_len', []), n = d.length - 1;
-    var x0 = 150, x1 = 1420, y0 = 620, top = 140, sy = (y0 - 120) / top, s = '';
-    function X(i) { return x0 + i * (x1 - x0) / n; }
-    function Y(v) { return y0 - v * sy; }
-    s += l(x0, y0, x1, y0, INK) + l(x0, y0, x0, 110, INK);
-    [0, 50, 100].forEach(function (v) { s += t(x0 - 14, Y(v) + 8, v, { size: 22, anchor: 'end', op: 0.6 }); });
-    [0, 64, 128, 192, n].forEach(function (v) { s += l(X(v), y0, X(v), y0 + 10, INK) + t(X(v), y0 + 34, v, { size: 22, anchor: 'middle', op: 0.6 }); });
-    s += t(x1, y0 + 64, 'move →', { size: 22, anchor: 'end', op: 0.5 });
-    s += t(60, 360, 'longest relator', { size: 24, anchor: 'middle', op: 0.5, extra: ' transform="rotate(-90 60 360)"' });
-    var peak = Math.max.apply(null, d), ip = d.indexOf(peak);
-    s += l(x0, Y(peak), x1, Y(peak), BLUE, { dash: '11 7', op: 0.35 });
-    s += '<polyline fill="none" stroke="' + BLUE + '" stroke-width="4" stroke-linejoin="round" points="' +
-      d.map(function (v, i) { return X(i).toFixed(1) + ',' + Y(v).toFixed(1); }).join(' ') + '"/>';
-    s += c(X(ip), Y(peak), 8, BLUE);
-    s += t(X(ip), Y(peak) - 22, peak + ' letters', { sans: true, weight: 600, size: 30, anchor: 'middle', fill: BLUE });
-    s += t(X(0) + 24, Y(72), 'y x y⁻¹ = x²', { size: 26, fill: BLUE });
-    s += t(X(0) + 24, Y(72) + 30, 'after 2 Nielsen maps', { size: 20, op: 0.5 });
-    s += t(X(ip) + 90, Y(peak) - 14, 'then y = x¹²⁷', { size: 24 });
-    s += t(X(214), Y(80), '127 erasures', { size: 24, op: 0.6 });
-    s += t(x1 + 14, y0 + 6, '(y⁻¹, x⁻¹)', { size: 22, op: 0.6 });
-    s += foot('each step  y x → x² y  is one AC substitution with the 5-letter relator · Britton reduction in BS(1,2), compiled into AC moves');
-    add('p07-bs12', 'BS(1,2): grow to ' + peak + ', then collapse', 'ms622 · ' + n + ' moves · no search · greedy: 78,774 nodes', s);
-  })();
 
   /* =====================================================================
      p08  every MS row is BS(n, n+1)
