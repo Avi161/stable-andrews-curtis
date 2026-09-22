@@ -6,11 +6,10 @@ evaluations, substitution moves); "nodes" = popped states. Path length = relator
 where stated); signed permutations are free.
 
 1. **Title.**
-2. **Everything at 1,000 units.** One fixed solver (Nielsen search, 14 Sep), no lookup table.
+2. **Everything at 1,000 units.** One fixed solver (Nielsen search, 14 Sep).
    AC1M: the 19 misses are two AC1M-only orbits and solve at 1,035–1,153 units.
-3. **MS-640 in 2.0 s.** Same container, one core, same protocol for both: search clock, then the batch clock with
-   two independent replays and 12 × 0.25 s cooldowns. The earlier "2.36 s" for the cascade was on a Mac, so it is
-   not compared directly. The new solver spends slightly more units than the cascade (25,064 vs 22,075) but is faster.
+3. **MS-640 in 2.3 s.** Search time, same container, one core, for both solvers (BS cascade 5.7 s). Replaying all
+   640 paths adds about 0.6 s; the old "9.4 s / 5.9 s" bars also counted 3 s of fixed pauses in the timing script.
 4. **Subset-60.** Greedy numbers are the saved 1,000,000-node, cap-24 run. Ours: 1,000-unit budget. Mean units
    79.7 is the conservative count; popped states alone average 7.7.
 5. **Per-row.** Easy rows cost us a little more than greedy (3–12 nodes); the tail is where it wins.
@@ -20,14 +19,9 @@ where stated); signed permutations are free.
 8. **Every MS row is BS(n, n+1).** By definition of MS(n, w). 182 are n = 1. The Britton check passes on 342 roots.
 9. **Trivial vs AC-trivial.** Exponent ±1 ⇒ trivial group (Miller–Schupp) for every n; an AC path is compiled
    for n = 1 always, for n > 1 only when every pinch divides. A stall is not a counterexample.
-10. **Check at every state.** Old cascade: probing the BS pattern at every popped state cut the unsolved census
-    residue 2,130 → 1,200 for +5.9 % wall time. New solver: gates on generated children make MS-640 7× faster.
-11. **Census staircase.** Every row in the last four bars is replayed as elementary AC moves, including all 72,779
-    Nielsen-search certificates (79.2M moves, 0 failures, `data/hashfree_census_ac_decode.json`). 41 rows need a
-    rows the rank-two solver leaves at 1,000 units solve at 1,048–10,080 units. BS cascade:
-    43,485 paths use basis changes (AC by transport, not expanded in that run). Nodes and units are different counters. The 72,779 of the table policy uses a
-    12.8M-state backward table built once (uncharged lookups); Nielsen search uses no table.
-12. **Solved vs budget.** The policy is cheaper on the easiest rows; the new solver passes its final count at 128 units.
+11. **AC19 Aut-min census.** Every row in every bar is replayed as elementary AC moves, including all 72,779
+    Nielsen-search certificates (79.2M moves, 0 failures, `data/hashfree_census_ac_decode.json`). The 41 rows
+    Nielsen search leaves at 1,000 units solve at 1,048–10,080 units. Nodes and units are different counters.
 13. **Originals.** Every row of AC19_extended searched from its own spelling — no transport through an automorphism.
 13b. **Fixed-basis ladder.** Unsolved after 100 → 10M nodes: greedy 18,117 → 28, S20_MK2 14,475 → 9. At 10M greedy
     solves 72,751 and S20_MK2 72,770 of 72,779. The 1M–10M rungs cost ≈215 core-hours and the 10M rung changed nothing.
@@ -38,8 +32,7 @@ where stated); signed permutations are free.
     the original to the Aut-min representative, the length spikes far above where it starts before it trivialises
     (peak 25 → 77 on ac19x_21044). That is why these rows were unsolved at 10M: at some point the relator length has
     to go far above the current state, and a fixed-basis, length-ordered search never goes there. Nielsen edges let the
-    Nielsen search walk around the spike instead (next slides).
-15. **Ingredient ladder.** Same 180 leftovers: memory 3 → 31, Nielsen edges → 172, perms → 175.
+    Nielsen search walk around the spike instead.
 16. **Nine rows.** Fixed-basis search failed at 10M nodes; Nielsen search needs 98–665 units.
 18. **Ablation.** Same machine, one core, the rank-two solver with one part removed.
 19. **Path length.** AC moves = substitutions + Nielsen maps; not a lower bound.

@@ -372,28 +372,6 @@
     add('p09-bs-trivial', 'Trivial always, an AC path not always', 'MS-640 roots · consecutive BS relator', s);
   })();
 
-  /* =====================================================================
-     p10  checking the rule at every state
-     ===================================================================== */
-  (function () {
-    var s = '';
-    function stat(x, y, big, cap, col) {
-      return t(x, y, big, { sans: true, weight: 700, size: 58, fill: col || INK }) + t(x, y + 36, cap, { size: 22, op: 0.55 });
-    }
-    s += t(90, 110, 'BS cascade · AC19 census', { sans: true, weight: 600, size: 30 });
-    s += t(90, 146, 'BS pattern probed at every popped state', { size: 22, op: 0.45 });
-    s += stat(90, 270, k(P.bsprobe_unsolved_before) + ' → ' + k(P.bsprobe_unsolved_after), 'unsolved at 501 nodes', BLUE);
-    s += stat(90, 420, P.bsprobe_nodes_pct + '%', 'nodes', BLUE);
-    s += stat(420, 420, '+' + P.bsprobe_wall_pct + '%', 'wall time', OR);
-    s += l(800, 90, 800, 560, INK, { op: 0.12 });
-    var h = R.ms640_F || {}, hg = R['ms640_F-nogates'] || {}, u = R.s60_F || {}, ug = R['s60_F-nogates'] || {};
-    s += t(870, 110, 'Nielsen search', { sans: true, weight: 600, size: 30 });
-    s += t(870, 146, 'finishing gates on every child, not just the root', { size: 22, op: 0.45 });
-    s += stat(870, 270, f1(hg.search_wall_s) + ' s → ' + f1(h.search_wall_s) + ' s', 'MS-640 search, one core', BLUE);
-    s += stat(870, 420, f1(ug.search_wall_s) + ' s → ' + f1(u.search_wall_s) + ' s', 'subset-60 search, one core', BLUE);
-    s += foot('left: 72,779 Aut-min rows, budget 501 (a cached pattern lookup; the companion is scanned only on a match) · right: same machine, 1,000 units');
-    add('p10-bs-every-state', 'Check at every state: it pays for itself', 'BS / pinch / primitive gates', s);
-  })();
 
   /* =====================================================================
      p11  AC19: how the census count moved
@@ -405,13 +383,11 @@
       { name: 'S20_MK2', sub: '1,000 nodes', v: P.census_s20_1k, col: INK, op: 0.28 },
       { name: 'BS cascade', sub: '501 nodes', v: P.census_cascade501, col: INK, op: 0.28 },
       { name: 'census policy', sub: '1,000 units · 9 Sep', v: H.policy_solved, col: INK, op: 0.45 },
-      { name: 'policy, no table', sub: '1,000 units', v: P.census_notable_policy, col: INK, op: 0.45 },
-      { name: 'policy + lookup table', sub: k(P.table14_states) + ' states, uncharged', v: P.census_table14, col: BLUE, hatch: true },
-      { name: 'Nielsen search', sub: '1,000 units · 14 Sep · no table', v: get(P, 'rank2_census.solved'), col: BLUE, op: 0.85 }
+      { name: 'Nielsen search', sub: '1,000 units · 14 Sep', v: get(P, 'rank2_census.solved'), col: BLUE, op: 0.85 }
     ];
     var x0 = 600, lo = 64000, sc = 880 / (73000 - lo), s = hatch('p11-h', BLUE);
     rows.forEach(function (row, i) {
-      var y = 100 + i * 82, w = (row.v - lo) * sc;
+      var y = 130 + i * 100, w = (row.v - lo) * sc;
       s += t(80, y + 4, row.name, { sans: true, weight: 600, size: 28, fill: row.op > 0.5 ? BLUE : INK });
       s += t(80, y + 32, row.sub, { size: 20, op: 0.45 });
       s += row.hatch ? r(x0, y - 22, w, 40, 'url(#p11-h)', { op: 0.55 }) : r(x0, y - 22, w, 40, row.col, { op: row.op });
@@ -419,40 +395,10 @@
     });
     var xa = x0 + (total - lo) * sc;
     s += t(80, 668, 'every row in every bar is an explicit AC path, replayed move by move', { size: 20, fill: BLUE, op: 0.9 });
-    s += foot('Nielsen search: the last ' + (total - get(P, 'rank2_census.solved')) + ' rows solve at 1,048–10,080 units · table: 12.8M states built backwards once, lookups uncharged · axis from ' + k(lo));
-    add('p11-census', 'AC19: ' + k(get(P, 'rank2_census.solved')) + ' of ' + k(total) + ', no table', 'Aut-minimal census · per-row budget', s);
+    s += foot('Nielsen search: the last ' + (total - get(P, 'rank2_census.solved')) + ' rows solve at 1,048–10,080 units · axis from ' + k(lo));
+    add('p11-census', 'AC19 Aut-min: ' + k(get(P, 'rank2_census.solved')) + ' of ' + k(total), '1,000 units per row', s);
   })();
 
-  /* =====================================================================
-     p12  census: solved vs budget
-     ===================================================================== */
-  (function () {
-    var cc = P.census_curve_r2 || {}, b = cc.budgets || [], total = cc.rows;
-    var x0 = 190, x1 = 1400, y0 = 610, y1 = 110, s = '';
-    function X(v) { return logx(v, 5, 1000, x0, x1); }
-    function Y(v) { return y0 - v / total * (y0 - y1); }
-    s += l(x0, y0, x1, y0, INK) + l(x0, y0, x0, y1 - 20, INK);
-    [10, 100, 1000].forEach(function (v) { s += l(X(v), y0, X(v), y0 + 10, INK) + t(X(v), y0 + 38, k(v), { size: 22, anchor: 'middle', op: 0.6 }); });
-    [0, 20000, 40000, 60000].forEach(function (v) { s += t(x0 - 14, Y(v) + 8, v ? (v / 1000) + 'k' : '0', { size: 22, anchor: 'end', op: 0.6 }); });
-    s += t((x0 + x1) / 2, y0 + 78, 'units per row (log)', { size: 24, anchor: 'middle', op: 0.5 });
-    function line(vals, col, sw) {
-      return '<polyline fill="none" stroke="' + col + '" stroke-width="' + sw + '" stroke-linejoin="round" points="' +
-        vals.map(function (v, i) { return X(b[i]).toFixed(1) + ',' + Y(v).toFixed(1); }).join(' ') + '"/>' +
-        vals.map(function (v, i) { return c(X(b[i]), Y(v), 5, col); }).join('');
-    }
-    s += l(x0, Y(cc.policy_solved), x1, Y(cc.policy_solved), INK, { dash: '9 7', op: 0.3 });
-    s += line(cc.policy, INK, 3) + line(cc.new, BLUE, 4);
-    var xc = X(cc.new_crosses_policy_at);
-    s += l(xc, Y(cc.policy_solved), xc, y0, BLUE, { dash: '9 7', op: 0.7 });
-    s += t(xc, y0 - 16, cc.new_crosses_policy_at + ' units', { size: 22, anchor: 'middle', fill: BLUE, extra: ' paint-order="stroke" stroke="' + PAPER + '" stroke-width="8"' });
-    s += t(x1 + 16, Y(cc.solved) - 14, k(cc.solved), { size: 24, fill: BLUE });
-    s += t(x1 + 16, Y(cc.policy_solved) + 24, k(cc.policy_solved), { size: 24 });
-    s += t(X(40) - 24, Y(62000), 'Nielsen search', { sans: true, weight: 600, size: 26, anchor: 'end', fill: BLUE });
-    s += t(X(75), Y(cc.policy[b.indexOf(75)]) + 44, 'census policy', { sans: true, weight: 600, size: 26 });
-    s += foot('72,779 Aut-min rows · total units ' + (cc.new_total_units / 1e6).toFixed(2) + 'M vs ' + (cc.policy_total_units / 1e6).toFixed(2) +
-      'M (unsolved at 1,000) · the policy is cheaper on the easiest rows: ≤ 20 units ' + k(cc.policy[b.indexOf(20)]) + ' vs ' + k(cc.new[b.indexOf(20)]));
-    add('p12-curve', 'Past the old policy at ' + cc.new_crosses_policy_at + ' units', 'rows solved within the budget', s);
-  })();
 
 
   /* =====================================================================
@@ -615,26 +561,6 @@
     add('p14b-profiles', 'Same moves, much higher peak', 'why the Aut-min rows resist 10M nodes', s);
   })();
 
-  /* =====================================================================
-     p15  what each ingredient buys, same 180 rows
-     ===================================================================== */
-  (function () {
-    var L = P.ladder180 || {}, st = (L.steps || []).slice(0, 4), s = hatch('p15-h', BLUE);
-    var base = 590, sc = 440 / L.rows;
-    st.forEach(function (row, i) {
-      var x = 190 + i * 250, h = row.solved * sc, w = 150;
-      var fill = i < 2 ? INK : BLUE, op = i < 2 ? 0.25 : 0.85;
-      s += r(x, base - h, w, h, fill, { op: op });
-      s += t(x + w / 2, base - h - 16, row.solved, { sans: true, weight: 700, size: 48, anchor: 'middle', fill: i < 2 ? INK : BLUE });
-      s += t(x + w / 2, base + 36, row.label, { size: 22, anchor: 'middle', op: 0.7 });
-    });
-    s += l(170, base, 1420, base, INK);
-    s += t(640, 400, '+' + (st[2].solved - st[1].solved), { sans: true, weight: 700, size: 40, anchor: 'middle', fill: BLUE });
-    var w7 = L.whole727 || {};
-    s += foot('same ' + L.rows + ' rows of the policy’s 727 leftovers, 1,000 units · all 727: ' + get(w7, 'nielsen.solved') + ' with Nielsen edges → ' +
-      L.rank2_727 + ' with signed permutations too');
-    add('p15-ladder', 'Nielsen edges do the work', L.rows + ' hard rows · one part added at a time', s);
-  })();
 
   /* =====================================================================
      p16  the nine rows that beat 10M nodes
