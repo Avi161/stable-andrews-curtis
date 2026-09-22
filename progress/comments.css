@@ -1,0 +1,30 @@
+.cmt-pill { position: absolute; left: 210px; bottom: 36px; z-index: 6; font-family: var(--mono); font-size: 20px; line-height: 1;
+            color: var(--ink); background: none; border: 1px solid rgba(25, 24, 19, 0.25); border-radius: 999px;
+            padding: 9px 18px; cursor: pointer; opacity: 0.3; transition: opacity 0.2s; }
+.cmt-pill:hover { opacity: 0.9; }
+.cmt-pill .n { color: var(--blue); margin-left: 8px; }
+.cmt-pins { position: absolute; inset: 0; z-index: 4; pointer-events: none; display: none; }
+body.cmt-open .cmt-pins { display: block; }   /* pins only while reviewing, never while presenting */
+.cmt-pin { position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
+           display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 14px;
+           border: 2px solid var(--blue); color: var(--blue); background: var(--paper); }
+.cmt-pin.committed { background: var(--blue); color: #fff; }
+.cmt-pin.fixed { border-color: rgba(25, 24, 19, 0.3); color: rgba(25, 24, 19, 0.3); background: var(--paper); }
+.cmt-panel { position: fixed; top: 16px; right: 16px; bottom: 16px; width: 380px; z-index: 20; display: none;
+             flex-direction: column; gap: 10px; padding: 16px; overflow: auto; background: var(--paper);
+             border: 1px solid rgba(25, 24, 19, 0.14); border-radius: 18px; box-shadow: 0 26px 64px rgba(25, 24, 19, 0.18);
+             font-family: var(--mono); font-size: 15px; color: var(--ink); }
+body.cmt-open .cmt-panel { display: flex; }
+.cmt-head { display: flex; justify-content: space-between; align-items: baseline; opacity: 0.7; }
+.cmt-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.cmt-list li { padding: 8px 10px; border-radius: 10px; background: rgba(43, 84, 196, 0.06); line-height: 1.4; white-space: pre-wrap; }
+.cmt-list li.sent { opacity: 0.45; } .cmt-list li.committed { background: rgba(25, 24, 19, 0.05); }
+.cmt-text { font: 16px/1.4 var(--mono); color: var(--ink); background: #fff; border: 1px solid var(--hair);
+            border-radius: 10px; padding: 10px; resize: vertical; min-height: 96px; }
+.cmt-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.cmt-panel button { font: 14px/1 var(--mono); color: var(--ink); background: none; cursor: pointer;
+                    border: 1px solid rgba(25, 24, 19, 0.25); border-radius: 999px; padding: 8px 14px; }
+.cmt-panel button:hover { color: var(--blue); border-color: var(--blue); }
+.cmt-panel button.on, .cmt-panel button.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+body.cmt-pinning .stage { cursor: crosshair; }
+@media print { .cmt-pill, .cmt-pins, .cmt-panel { display: none !important; } }
