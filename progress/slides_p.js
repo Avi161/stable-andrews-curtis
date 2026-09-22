@@ -153,7 +153,7 @@
     s += fdia(770, 105, 300, 120, 'B · primitive?', 'a letter used once');
     s += fbox(970, 60, 270, 90, 'substitute it away', ['r = x^±1 yⁿ  or  xᵐ y^±1'], { tint: true, stat: st('B') });
     s += fdia(770, 300, 300, 120, 'C · BS-shaped?', 'g^a h^p g^-a h^q');
-    s += fbox(970, 255, 270, 90, 'pinch cascade', ['b⁻¹aᵏb → a²ᵏ  (one move)', 'repeat until one b left'], { tint: true, stat: st('C') });
+    s += fbox(970, 255, 270, 90, 'pinch cascade', ['b⁻¹a → a²b⁻¹  (one move)', 'repeat until one b left'], { tint: true, stat: st('C') });
     s += fbox(1300, 190, 270, 110, '(x, y)', ['AC path, replayed by', 'an independent verifier'], { done: true });
     s += '<rect x="20" y="420" width="1560" height="250" rx="16" fill="none" stroke="rgba(25,24,19,0.18)" stroke-dasharray="8 7"/>';
     s += t(120, 448, 'D · best-first search with whatever is left of the 1,000 units', { size: 17, op: 0.6 });
@@ -317,7 +317,7 @@
     s += t(X(ip) + 90, Y(peak) - 14, 'then y = x¹²⁷', { size: 24 });
     s += t(X(214), Y(80), '127 erasures', { size: 24, op: 0.6 });
     s += t(x1 + 14, y0 + 6, '(y⁻¹, x⁻¹)', { size: 22, op: 0.6 });
-    s += foot('each pinch  y xᵏ → x²ᵏ y  is one AC substitution with the 5-letter relator · Britton reduction in BS(1,2), compiled into AC moves');
+    s += foot('each step  y x → x² y  is one AC substitution with the 5-letter relator · Britton reduction in BS(1,2), compiled into AC moves');
     add('p07-bs12', 'BS(1,2): grow to ' + peak + ', then collapse', 'ms622 · ' + n + ' moves · no search · greedy: 78,774 nodes', s);
   })();
 
@@ -356,7 +356,7 @@
     var ms = BS.ms640 || {};
     var rows = [
       { n: '01', what: 'the group is trivial', gloss: 'companion exponent ±1 ⇒ perfect ⇒ trivial (Miller–Schupp)', num: ms.bs + ' / ' + ms.rows, col: BLUE },
-      { n: '02', what: 'an AC path, n = 1', gloss: 'Britton reduction, one substitution per pinch', num: ms.accept_m1 + ' / ' + ms.m1, col: BLUE },
+      { n: '02', what: 'an AC path, n = 1', gloss: 'Britton reduction, one substitution per letter moved', num: ms.accept_m1 + ' / ' + ms.m1, col: BLUE },
       { n: '03', what: 'an AC path, n > 1', gloss: 'only when every pinch divides', num: ms.accept_mgt1 + ' / ' + ms.mgt1, col: OR }
     ];
     var s = '';
