@@ -125,7 +125,7 @@
       { name: 'subset-60', sub: 'the talk’s benchmark · ' + f1(get(S, 'new.wall')) + ' s', got: get(S, 'new.solved'), of: S.rows },
       { name: 'AC19, Aut-minimal', sub: 'every orbit', got: get(H, 'census.solved'), of: get(H, 'census.rows') },
       { name: 'AC19, as written', sub: 'every original spelling', got: get(H, 'extended.solved'), of: get(H, 'extended.rows') },
-      { name: 'AC1M', sub: (H.ac1m_all_rows - H.ac1m_all_solved) + ' misses, all in 2 orbits', got: H.ac1m_all_solved, of: H.ac1m_all_rows }
+      { name: 'AC1M', sub: (H.ac1m_all_rows - H.ac1m_all_solved) + ' need 1,035–1,153 units · all are 2 presentations', got: H.ac1m_all_solved, of: H.ac1m_all_rows }
     ];
     var s = '';
     rows.forEach(function (row, i) {
