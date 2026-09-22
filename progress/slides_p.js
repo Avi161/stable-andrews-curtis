@@ -104,7 +104,8 @@
   function flab(x, y, s0, o) { o = o || {}; return t(x, y, s0, { size: 16, anchor: o.anchor || 'middle', fill: o.blue ? BLUE : INK, op: o.blue ? 1 : 0.55 }); }
 
   var H = P.head || {}, R = P.runs || {}, S = P.s60 || {}, BS = P.bs || {};
-  var msNew = R.ms640_H_runms640_protocol || {}, msOld = R.ms640_OLDCASCADE_b1000_protocol || {};
+  var R2 = P.rank2 || {}, S2 = R2.s60_F || {}, M2 = R2.ms640_F || {};
+  var msNew = R2.ms640_protocol || {}, msOld = R.ms640_OLDCASCADE_b1000_protocol || {};
   var msNewSearch = msNew.search_wall, msNewBatch = msNew.batch_wall_including_verification;
 
   /* =====================================================================
@@ -120,64 +121,61 @@
      p02  everything at 1,000 units
      ===================================================================== */
   (function () {
+    var C2 = P.rank2_census || {};
     var rows = [
       { name: 'MS-640', sub: 'solved Miller–Schupp · ' + f1(msNewSearch) + ' s in all', got: 640, of: 640 },
-      { name: 'subset-60', sub: 'the talk’s benchmark · ' + f1(get(S, 'new.wall')) + ' s', got: get(S, 'new.solved'), of: S.rows },
-      { name: 'AC19, Aut-minimal', sub: 'every orbit', got: get(H, 'census.solved'), of: get(H, 'census.rows') },
-      { name: 'AC19, as written', sub: 'every original spelling', got: get(H, 'extended.solved'), of: get(H, 'extended.rows') },
-      { name: 'AC1M', sub: (H.ac1m_all_rows - H.ac1m_all_solved) + ' need 1,035–1,153 units · all are 2 presentations', got: H.ac1m_all_solved, of: H.ac1m_all_rows }
+      { name: 'subset-60', sub: 'the talk’s benchmark · ' + f1(S2.wall) + ' s', got: S2.solved, of: S2.rows },
+      { name: 'AC19, Aut-minimal', sub: 'the last ' + (C2.rows - C2.solved) + ' need 1,048–10,080 units', got: C2.solved, of: C2.rows }
     ];
     var s = '';
     rows.forEach(function (row, i) {
-      var y = 90 + i * 122, frac = row.got / row.of;
-      s += t(60, y, row.name, { sans: true, weight: 600, size: 34 });
-      s += t(60, y + 34, row.sub, { size: 22, op: 0.5 });
-      s += r(470, y - 26, 560, 32, INK, { op: 0.08 }) + r(470, y - 26, 560 * frac, 32, BLUE, { op: 0.85 });
-      s += t(1545, y, k(row.got) + ' / ' + k(row.of), { sans: true, weight: 700, size: 40, anchor: 'end', fill: BLUE });
+      var y = 170 + i * 160, frac = row.got / row.of;
+      s += t(60, y, row.name, { sans: true, weight: 600, size: 38 });
+      s += t(60, y + 36, row.sub, { size: 22, op: 0.5 });
+      s += r(470, y - 28, 560, 36, INK, { op: 0.08 }) + r(470, y - 28, 560 * frac, 36, BLUE, { op: 0.85 });
+      s += t(1545, y, k(row.got) + ' / ' + k(row.of), { sans: true, weight: 700, size: 44, anchor: 'end', fill: BLUE });
     });
-    add('p02-everything', 'Everything solves at 1,000 units', 'hash-free solver · 14 Sep', s);
+    add('p02-everything', 'One simple solver, 1,000 units per row', 'hash-free solver · 14 Sep', s);
   })();
 
 
   /* =====================================================================
-     p02b  how the hash-free solver works
+     p02b  how the solver works
      ===================================================================== */
   (function () {
-    var id = 'pf1', s = fdefs(id);
-    /* row 1: cheap finishing tests */
+    var id = 'pf1', s = fdefs(id), C = (P.rank2_census || {}).stages || {}, M = P.rank2_ms640 || {};
+    function st(key) { var a = C[key] || {}, b = M[key] || {}; return 'AC19 ' + k(a.rows) + ' · MS-640 ' + k(b.rows) + ' · median ' + k(a.median) + ' units'; }
     s += fbox(30, 60, 190, 90, 'presentation', ['(r₁, r₂)']);
     s += fbox(270, 60, 330, 90, 'A · Whitehead descent', ['apply a Nielsen map', 'while it shortens']);
     s += fdia(770, 105, 300, 120, 'B · primitive?', 'a letter used once');
-    s += fbox(970, 60, 250, 90, 'substitute it away', ['one move per letter'], { tint: true });
-    /* row 2 */
+    s += fbox(970, 60, 270, 90, 'substitute it away', ['one move per letter'], { tint: true, stat: st('B') });
     s += fdia(770, 300, 300, 120, 'C · BS-shaped?', 'g^a h^p g^-a h^q');
-    s += fbox(970, 255, 250, 90, 'pinch cascade', ['one move per pinch', 'generalises BS(1,2)'], { tint: true });
-    s += fbox(1290, 190, 280, 110, '(x, y)', ['certificate, replayed by', 'an independent verifier'], { done: true });
-    /* row 3: one search, one budget */
+    s += fbox(970, 255, 270, 90, 'pinch cascade', ['one move per pinch', 'generalises BS(1,2)'], { tint: true, stat: st('C') });
+    s += fbox(1300, 190, 270, 110, '(x, y)', ['AC path, replayed by', 'an independent verifier'], { done: true });
     s += '<rect x="20" y="420" width="1560" height="250" rx="16" fill="none" stroke="rgba(25,24,19,0.18)" stroke-dasharray="8 7"/>';
-    s += t(120, 448, 'one best-first search · one budget of 1,000 units · no hash table, no lookup table', { size: 17, op: 0.6 });
-    s += fbox(40, 480, 280, 100, 'pop the shortest', ['total length', '(+5 if a generator was added)']);
+    s += t(120, 448, 'D · best-first search with whatever is left of the 1,000 units', { size: 17, op: 0.6 });
+    s += fbox(40, 480, 280, 100, 'pop the shortest', ['total relator length']);
     s += fdia(468, 530, 200, 110, 'seen?', 'sorted list');
-    s += fbox(590, 480, 330, 100, 'expand', ['substitutions · 4 Nielsen maps', 'define / eliminate']);
+    s += fbox(590, 480, 330, 100, 'expand', ['AC substitutions', '+ 4 Nielsen maps']);
     s += fbox(960, 480, 240, 100, 'canonical form', ['8 signed permutations']);
     s += fdia(1370, 530, 290, 120, 'child finishes?', 'test B and C');
-    /* arrows */
+    s += t(1560, 448, st('D'), { size: 17, anchor: 'end', fill: BLUE });
     s += fpath(id, 'M220 105 H264') + fpath(id, 'M600 105 H614');
     s += fpath(id, 'M920 105 H964', { blue: true }) + flab(942, 92, 'yes', { blue: true });
-    s += fpath(id, 'M1220 105 H1430 V184', { blue: true });
+    s += fpath(id, 'M1240 105 H1435 V184', { blue: true });
     s += fpath(id, 'M770 165 V234') + flab(790, 205, 'no', { anchor: 'start' });
     s += fpath(id, 'M920 300 H964', { blue: true }) + flab(942, 287, 'yes', { blue: true });
-    s += fpath(id, 'M1220 300 H1250 V245 H1284', { blue: true });
+    s += fpath(id, 'M1240 300 H1265 V245 H1294', { blue: true });
     s += fpath(id, 'M770 360 V395 H90 V474') + flab(790, 385, 'no', { anchor: 'start' });
     s += fpath(id, 'M320 530 H362');
     s += fpath(id, 'M568 530 H584') + flab(577, 516, 'no');
     s += fpath(id, 'M920 530 H954') + fpath(id, 'M1200 530 H1219');
     s += fpath(id, 'M1370 470 V306', { blue: true }) + flab(1390, 400, 'yes', { anchor: 'start', blue: true });
-    s += fpath(id, 'M1370 590 V640 H180 V586') + flab(1100, 632, 'no — queue the children, pop again');
+    s += fpath(id, 'M1370 590 V640 H180 V586') + flab(900, 632, 'no — queue the children, pop again');
     s += fpath(id, 'M468 585 V640', { dash: true }) + flab(488, 614, 'yes: skip', { anchor: 'start' });
-    s += foot('define adds a generator (rank 3 or 4) and eliminate removes one · such states score +5 letters per extra generator ' +
-      'and are explored at most half as often, so the solver leaves rank two only when it clearly pays');
-    add('p02b-flow', 'How the hash-free solver works', 'one fixed procedure · 14 Sep', s);
+    s += foot('one budget of 1,000 units per row, shared by all stages · a unit = one popped state, one Nielsen map tried or applied, or one substitution · ' +
+      'A–C cost nothing when they do not apply; the search gets the rest');
+    add('p02b-flow', 'How the solver works', 'no hash table · no lookup table', s);
   })();
 
   /* =====================================================================
@@ -207,10 +205,10 @@
     });
     s += l(x0 + 6 * pxs, 140, x0 + 6 * pxs, 500, OR, { dash: '9 7', op: 0.7 });
     s += t(x0 + 6 * pxs + 10, 150, '6 s', { size: 22, fill: OR });
-    s += t(1070, 620, 'work: ' + k(H.ms640.total_units) + ' units · plain greedy needed ' + k(P.greedy_ms640_nodes) + ' nodes',
+    s += t(1070, 620, 'work: ' + k(msNew.total_units) + ' units · plain greedy needed ' + k(P.greedy_ms640_nodes) + ' nodes',
       { size: 24, anchor: 'middle', op: 0.6 });
     s += foot('same container, one core · light = two independent replays + 12 × 0.25 s cooldowns · recorded: cascade ' +
-      f2(P.cascade_ms640_search_rec) + ' / ' + f2(P.cascade_ms640_batch_rec) + ' s on a Mac, new ' + f2(H.ms640_protocol.search_wall) + ' / ' + f2(H.ms640_protocol.batch_wall_including_verification) + ' s');
+      f2(P.cascade_ms640_search_rec) + ' / ' + f2(P.cascade_ms640_batch_rec) + ' s on a Mac');
     add('p03-ms640', 'MS-640 in ' + f1(msNewSearch) + ' seconds', '640 / 640 · 1,000 units per row · one core', s);
   })();
 
@@ -218,7 +216,7 @@
      p04-p06  subset-60
      ===================================================================== */
   (function () {
-    var g = S.greedy || {}, n = S.new || {};
+    var g = S.greedy || {}, n = { units: S2.units, subs: S2.substitution, pops: S2.pops, nielsen: S2.nielsen, wall: S2.wall };
     var panels = [
       { head: 'nodes explored', y: 110, items: [
         { lab: 'mean', a: g.nodes.mean, b: n.units.mean, word: 'fewer', fmt: k, fmtb: f1 },
@@ -258,15 +256,15 @@
     });
     rows.forEach(function (row, i) {
       var x = x0 + 10 + i * (x1 - x0 - 20) / (rows.length - 1);
-      var yg = logy(Math.max(1, row.greedy), lo, hi, y0, y1), yn = logy(Math.max(1, row.new), lo, hi, y0, y1);
+      var yg = logy(Math.max(1, row.greedy), lo, hi, y0, y1), yn = logy(Math.max(1, row.r2), lo, hi, y0, y1);
       s += l(x, yg, x, yn, INK, { op: 0.12, sw: 2 });
       s += c(x, yg, 6.5, OR, { op: 0.85 }) + c(x, yn, 6.5, BLUE, { op: 0.9 });
     });
-    var gmax = get(S, 'greedy.nodes.max'), nmax = get(S, 'new.units.max'), nDone = false;
+    var gmax = get(S, 'greedy.nodes.max'), nmax = get(S2, 'units.max'), nDone = false;
     rows.forEach(function (row, i) {
       var x = x0 + 10 + i * (x1 - x0 - 20) / (rows.length - 1);
       if (row.greedy === gmax && i === rows.length - 1) s += t(x - 4, logy(gmax, lo, hi, y0, y1) - 20, k(gmax), { size: 24, anchor: 'end', fill: OR });
-      if (row.new === nmax && !nDone) { nDone = true; s += t(x, logy(nmax, lo, hi, y0, y1) - 20, k(nmax), { size: 24, anchor: 'middle', fill: BLUE }); }
+      if (row.r2 === nmax && !nDone) { nDone = true; s += t(x, logy(nmax, lo, hi, y0, y1) - 20, k(nmax), { size: 24, anchor: 'middle', fill: BLUE }); }
     });
     s += c(x0 + 20, 118, 7, OR) + t(x0 + 38, 126, 'plain greedy · nodes', { size: 22, fill: OR });
     s += c(x0 + 20, 156, 7, BLUE) + t(x0 + 38, 164, 'hash-free · units', { size: 22, fill: BLUE });
@@ -280,7 +278,7 @@
       { name: 'plain greedy', sub: '10,000 nodes · ' + k(248227) , got: get(S, 'greedy10k.solved'), col: INK, op: 0.3 },
       { name: 'S20_MK2 · L + 20S + 2MK', sub: '10,000 nodes', got: get(S, 's20_10k.solved'), col: INK, op: 0.3 },
       { name: 'BS cascade · 6 Sep', sub: '1,000 units · ' + k(get(S, 'cascade.units.total')) + ' spent · ' + f1(get(S, 'cascade.wall')) + ' s', got: get(S, 'cascade.solved'), col: BLUE, op: 0.4 },
-      { name: 'hash-free · 14 Sep', sub: '1,000 units · ' + k(get(S, 'new.units.total')) + ' spent · ' + f1(get(S, 'new.wall')) + ' s', got: get(S, 'new.solved'), col: BLUE, op: 0.85 }
+      { name: 'hash-free · 14 Sep', sub: '1,000 units · ' + k(get(S2, 'units.total')) + ' spent · ' + f1(S2.wall) + ' s', got: S2.solved, col: BLUE, op: 0.85 }
     ];
     arms[0].sub = '10,000 nodes';
     var s = '';
@@ -417,11 +415,11 @@
     s += stat(90, 420, P.bsprobe_nodes_pct + '%', 'nodes', BLUE);
     s += stat(420, 420, '+' + P.bsprobe_wall_pct + '%', 'wall time', OR);
     s += l(800, 90, 800, 560, INK, { op: 0.12 });
-    var h = R.ms640_H || {}, hg = R['ms640_H-nogates'] || {}, u = R.u727_H || {}, ug = R['u727_H-nogates'] || {};
+    var h = R.ms640_F || {}, hg = R['ms640_F-nogates'] || {}, u = R.s60_F || {}, ug = R['s60_F-nogates'] || {};
     s += t(870, 110, 'hash-free solver', { sans: true, weight: 600, size: 30 });
     s += t(870, 146, 'finishing gates on every child, not just the root', { size: 22, op: 0.45 });
     s += stat(870, 270, f1(hg.search_wall_s) + ' s → ' + f1(h.search_wall_s) + ' s', 'MS-640 search, one core', BLUE);
-    s += stat(870, 420, ug.solved + ' → ' + u.solved, 'of the 727 policy leftovers', BLUE);
+    s += stat(870, 420, f1(ug.search_wall_s) + ' s → ' + f1(u.search_wall_s) + ' s', 'subset-60 search, one core', BLUE);
     s += foot('left: 72,779 Aut-min rows, budget 501 (a cached pattern lookup; the companion is scanned only on a match) · right: same machine, 1,000 units');
     add('p10-bs-every-state', 'Check at every state: it pays for itself', 'BS / pinch / primitive gates', s);
   })();
@@ -438,7 +436,7 @@
       { name: 'census policy', sub: '1,000 units · 9 Sep', v: H.policy_solved, col: INK, op: 0.45 },
       { name: 'policy, no table', sub: '1,000 units', v: P.census_notable_policy, col: INK, op: 0.45 },
       { name: 'policy + lookup table', sub: k(P.table14_states) + ' states, uncharged', v: P.census_table14, col: BLUE, hatch: true },
-      { name: 'hash-free solver', sub: '1,000 units · 14 Sep · no table', v: get(H, 'census.solved'), col: BLUE, op: 0.85 }
+      { name: 'hash-free solver', sub: '1,000 units · 14 Sep · no table', v: get(P, 'rank2_census.solved'), col: BLUE, op: 0.85 }
     ];
     var x0 = 600, lo = 64000, sc = 880 / (73000 - lo), s = hatch('p11-h', BLUE);
     rows.forEach(function (row, i) {
@@ -449,19 +447,16 @@
       s += t(x0 + w + 12, y + 7, k(row.v), { size: 24, fill: row.col === BLUE ? BLUE : INK });
     });
     var xa = x0 + (total - lo) * sc;
-    var AD = P.ac_decode || {};
-    s += t(80, 668, 'last four bars: every row replayed as elementary AC moves \u00b7 hash-free: ' + k(AD.decoded_and_replayed) + ' / ' + k(AD.rows) +
-      ', ' + (AD.elementary_moves_total / 1e6).toFixed(1) + 'M moves, 0 failures', { size: 20, fill: BLUE, op: 0.9 });
-    s += foot('BS cascade: ' + k(P.cascade501_aut_assisted) + ' of its paths change basis (AC by transport, not expanded in that run) · hash-free: ' +
-      '41 rows need a define / eliminate step within 1,000 units; their plain AC paths take 1,048–' + k(AD.max_units) + ' · axis from ' + k(lo));
-    add('p11-census', 'AC19: all ' + k(total) + ', no table', 'Aut-minimal census · per-row budget', s);
+    s += t(80, 668, 'every row in every bar is an explicit AC path, replayed move by move', { size: 20, fill: BLUE, op: 0.9 });
+    s += foot('hash-free: the last ' + (total - get(P, 'rank2_census.solved')) + ' rows solve at 1,048–10,080 units · table: 12.8M states built backwards once, lookups uncharged · axis from ' + k(lo));
+    add('p11-census', 'AC19: ' + k(get(P, 'rank2_census.solved')) + ' of ' + k(total) + ', no table', 'Aut-minimal census · per-row budget', s);
   })();
 
   /* =====================================================================
      p12  census: solved vs budget
      ===================================================================== */
   (function () {
-    var cc = P.census_curve || {}, b = cc.budgets || [], total = cc.rows;
+    var cc = P.census_curve_r2 || {}, b = cc.budgets || [], total = cc.rows;
     var x0 = 190, x1 = 1400, y0 = 610, y1 = 110, s = '';
     function X(v) { return logx(v, 5, 1000, x0, x1); }
     function Y(v) { return y0 - v / total * (y0 - y1); }
@@ -479,8 +474,8 @@
     var xc = X(cc.new_crosses_policy_at);
     s += l(xc, Y(cc.policy_solved), xc, y0, BLUE, { dash: '9 7', op: 0.7 });
     s += t(xc, y0 - 16, cc.new_crosses_policy_at + ' units', { size: 22, anchor: 'middle', fill: BLUE, extra: ' paint-order="stroke" stroke="' + PAPER + '" stroke-width="8"' });
-    s += t(x1 + 16, Y(total) - 6, k(total), { size: 24, fill: BLUE });
-    s += t(x1 + 16, Y(cc.policy_solved) + 30, k(cc.policy_solved), { size: 24 });
+    s += t(x1 + 16, Y(cc.solved) - 14, k(cc.solved), { size: 24, fill: BLUE });
+    s += t(x1 + 16, Y(cc.policy_solved) + 24, k(cc.policy_solved), { size: 24 });
     s += t(X(40) - 24, Y(62000), 'hash-free', { sans: true, weight: 600, size: 26, anchor: 'end', fill: BLUE });
     s += t(X(75), Y(cc.policy[b.indexOf(75)]) + 44, 'census policy', { sans: true, weight: 600, size: 26 });
     s += foot('72,779 Aut-min rows · total units ' + (cc.new_total_units / 1e6).toFixed(2) + 'M vs ' + (cc.policy_total_units / 1e6).toFixed(2) +
@@ -488,22 +483,6 @@
     add('p12-curve', 'Past the old policy at ' + cc.new_crosses_policy_at + ' units', 'rows solved within the budget', s);
   })();
 
-  /* =====================================================================
-     p13  every original spelling
-     ===================================================================== */
-  (function () {
-    var e = P.extended || {}, s = '';
-    s += t(800, 270, k(e.solved) + ' / ' + k(e.rows), { sans: true, weight: 700, size: 124, anchor: 'middle', fill: BLUE });
-    s += t(800, 336, 'AC19_extended rows, each searched from its own spelling', { size: 28, anchor: 'middle', op: 0.55 });
-    [[e.median, 'median units'], [e.p99, 'p99'], [e.max, 'max'], [e.stable, 'stable certificates']].forEach(function (p, i) {
-      var x = 320 + i * 320;
-      s += t(x, 510, k(p[0]), { sans: true, weight: 700, size: 64, anchor: 'middle' });
-      s += t(x, 550, p[1], { size: 22, anchor: 'middle', op: 0.55 });
-    });
-    s += foot('the census reaches originals by transporting through an automorphism; this run starts from each row as written · ' +
-      Math.round(get(H, 'extended.elapsed')) + ' s on 4 workers');
-    add('p13-originals', 'Every original spelling, searched forward', '1,000 units per row · no transport', s);
-  })();
 
   /* =====================================================================
      p13b  fixed basis: unsolved after each node budget
@@ -669,7 +648,7 @@
      p15  what each ingredient buys, same 180 rows
      ===================================================================== */
   (function () {
-    var L = P.ladder180 || {}, st = L.steps || [], s = hatch('p15-h', BLUE);
+    var L = P.ladder180 || {}, st = (L.steps || []).slice(0, 4), s = hatch('p15-h', BLUE);
     var base = 590, sc = 440 / L.rows;
     st.forEach(function (row, i) {
       var x = 190 + i * 250, h = row.solved * sc, w = 150;
@@ -682,7 +661,7 @@
     s += t(640, 400, '+' + (st[2].solved - st[1].solved), { sans: true, weight: 700, size: 40, anchor: 'middle', fill: BLUE });
     var w7 = L.whole727 || {};
     s += foot('same ' + L.rows + ' rows of the policy’s 727 leftovers, 1,000 units · all 727: ' + get(w7, 'nielsen.solved') + ' with Nielsen edges → ' +
-      get(w7, 'hybrid.solved') + ' with everything · closed set = block-sorted array, no hashing');
+      L.rank2_727 + ' with signed permutations too · closed set = block-sorted list, no hashing');
     add('p15-ladder', 'Nielsen edges do the work', L.rows + ' hard rows · one part added at a time', s);
   })();
 
@@ -705,66 +684,41 @@
     s += l(x0, ya, x1, ya, INK);
     [10, 100, 1000, 1e4, 1e5, 1e6, 1e7].forEach(function (v) { s += l(X(v), ya, X(v), ya + 10, INK) + t(X(v), ya + 38, tickLabel(v), { size: 22, anchor: 'middle', op: 0.6 }); });
     s += t(X(1e7), 80, '10M nodes: fail', { size: 22, anchor: 'middle', fill: OR });
-    s += foot('plain greedy and S20_MK2 both stop at 10,000,000 nodes (≈' + P.ladder_core_hours + ' core-hours for the 1M–10M rungs) · hash-free: rank-two certificates, 1,000 units');
+    s += foot('plain greedy and S20_MK2 both stop at 10,000,000 nodes (≈' + P.ladder_core_hours + ' core-hours for the 1M–10M rungs) · hash-free: 1,000 units, ordinary AC paths');
     var u = rows.map(function (r0) { return r0.units; });
     add('p16-nine', '10,000,000 nodes → ' + Math.min.apply(null, u) + ' units', 'the 9 rows no fixed-basis search solved', s);
   })();
 
-  /* =====================================================================
-     p17  define / eliminate on the last 41
-     ===================================================================== */
-  (function () {
-    var D = P.dyn41 || {}, pr = (D.pairs || []).slice().sort(function (a, b) { return a.rank2 - b.rank2; });
-    var x0 = 220, x1 = 1440, lo = 50, hi = 20000, s = '';
-    function X(v) { return logx(v, lo, hi, x0, x1); }
-    pr.forEach(function (p, i) {
-      var y = 100 + i * 16.5;
-      s += l(X(p.hybrid), y, X(p.rank2), y, INK, { op: 0.15, sw: 2 });
-      s += c(X(p.rank2), y, 5.5, INK, { op: 0.55 }) + c(X(p.hybrid), y, 5.5, BLUE);
-    });
-    var ya = 100 + pr.length * 16.5 + 20;
-    s += l(x0, ya, x1, ya, INK);
-    [100, 1000, 10000].forEach(function (v) { s += l(X(v), ya, X(v), ya + 10, INK) + t(X(v), ya + 38, k(v), { size: 22, anchor: 'middle', op: 0.6 }); });
-    s += t((x0 + x1) / 2, ya + 76, 'units per row (log)', { size: 22, anchor: 'middle', op: 0.5 });
-    s += t(X(get(D, 'hybrid_units.median')), 80, 'rank ≤ 4 · median ' + k(get(D, 'hybrid_units.median')), { size: 22, anchor: 'middle', fill: BLUE });
-    s += t(X(get(D, 'rank2_units.median')), 80, 'rank two · median ' + k(get(D, 'rank2_units.median')), { size: 22, anchor: 'middle' });
-    s += foot('the ' + D.rows + ' census rows the rank-two engine leaves at 1,000 (' + get(D, 'rank2_units.n') + ' with a 20,000-unit rank-two run shown) · define / eliminate are stable AC moves (Lemma 11, arXiv:2408.15332)');
-    add('p17-dyn', 'Rank 3 for a moment: ' + k(get(D, 'rank2_units.median')) + ' → ' + k(get(D, 'hybrid_units.median')), 'the last ' + D.rows + ' rows · define / eliminate', s);
-  })();
 
   /* =====================================================================
      p18  remove one part: what breaks (same machine)
      ===================================================================== */
   (function () {
     function arm(set, name) { return R[set + '_' + name] || {}; }
-    var fin = arm('ms640', 'H'), fu = arm('u727', 'H');
+    var fin = arm('ms640', 'F'), f60 = arm('s60', 'F');
     var rows = [
-      { part: 'nothing — final solver', ms: fin, u: fu, final: true },
-      { part: 'Nielsen edges', ms: arm('ms640', 'H-nonielsen'), u: null, note: '31 / 180' },
-      { part: 'gates on every child', ms: arm('ms640', 'H-nogates'), u: arm('u727', 'H-nogates') },
-      { part: 'signed permutations', ms: arm('ms640', 'H-noperm'), u: arm('u727', 'H-noperm') },
-      { part: 'define', ms: arm('ms640', 'H-nodefine'), u: arm('u727', 'H-nodefine') },
-      { part: 'eliminate', ms: arm('ms640', 'H-noeliminate'), u: arm('u727', 'H-noeliminate') }
+      { part: 'nothing — the solver', key: 'F', final: true },
+      { part: 'Nielsen edges', key: 'F-nonielsen' },
+      { part: 'finishing check on every child', key: 'F-nogates' },
+      { part: 'signed permutations', key: 'F-noperm' },
+      { part: 'Whitehead descent (A)', key: 'F-nodescent' },
+      { part: 'length order → S20_MK2 order', key: 'F-s20' }
     ];
     var cols = [620, 900, 1180, 1470], s = '';
-    ['removed', 'MS-640 search', 'MS-640 solved', '727 leftovers'].forEach(function (h, i) {
+    ['removed', 'MS-640 search', 'MS-640 solved', 'subset-60 solved'].forEach(function (h, i) {
       s += t(i ? cols[i] : 80, 100, h, { size: 20, op: 0.45, anchor: i ? 'end' : 'start' });
     });
     rows.forEach(function (row, i) {
-      var y = 170 + i * 76;
-      var slow = row.ms.search_wall_s > fin.search_wall_s * 1.5, lost = row.ms.solved < fin.solved;
-      var ulost = row.u && row.u.solved < fu.solved;
+      var y = 170 + i * 76, ms = arm('ms640', row.key), sb = arm('s60', row.key);
+      var slow = ms.search_wall_s > fin.search_wall_s * 1.5, lost = ms.solved < fin.solved, lost60 = sb.solved < f60.solved;
       var tint = row.final ? BLUE : null;
       s += t(80, y, row.part, { sans: true, weight: 600, size: 30, fill: tint || INK });
-      s += t(cols[1], y, f1(row.ms.search_wall_s) + ' s', { size: 28, anchor: 'end', fill: tint || (slow ? OR : INK) });
-      s += t(cols[2], y, row.ms.solved + ' / 640', { size: 28, anchor: 'end', fill: tint || (lost ? OR : INK) });
-      s += t(cols[3], y, row.u ? row.u.solved + ' / 727' : row.note + '*', { size: 28, anchor: 'end', fill: tint || (row.u ? (ulost ? OR : INK) : OR) });
+      s += t(cols[1], y, f1(ms.search_wall_s) + ' s', { size: 28, anchor: 'end', fill: tint || (slow ? OR : INK) });
+      s += t(cols[2], y, ms.solved + ' / 640', { size: 28, anchor: 'end', fill: tint || (lost ? OR : INK) });
+      s += t(cols[3], y, sb.solved + ' / 60', { size: 28, anchor: 'end', fill: tint || (lost60 ? OR : INK) });
       s += l(80, y + 28, 1470, y + 28, INK, { op: 0.1, sw: 1 });
     });
-    var F = arm('ms640', 'F'), Fs = arm('ms640', 'F-s20');
-    s += t(80, 660, 'ordering: S20_MK2 instead of length (rank-two engine) → MS-640 ' + f1(F.search_wall_s) + ' s → ' + f1(Fs.search_wall_s) + ' s',
-      { size: 22, op: 0.6 });
-    s += foot('same machine, one core, 1,000 units, one harness for every row (slide 3 uses the recorded protocol harness) · orange = worse than the final solver · * without Nielsen edges: 31 of 180 leftovers (slide 15)');
+    s += foot('same machine, one core, 1,000 units · orange = worse than the solver · signed permutations matter on the hardest AC19 rows (673 → 696 of the 727 leftovers)');
     add('p18-ablation', 'Take one part out: what breaks', 'same machine · one core', s);
   })();
 
@@ -772,7 +726,7 @@
      p19  path length in AC moves
      ===================================================================== */
   (function () {
-    var M = P.acmoves || {}, ms = M.ms640 || {}, s = hatch('p19-h', OR);
+    var M2a = M2 || {}, ms = { substitution: get(M2a, 'substitution.total'), nielsen: get(M2a, 'nielsen.total'), total: get(M2a, 'ac_moves.total'), median: get(M2a, 'ac_moves.median'), max: get(M2a, 'ac_moves.max') }, s = hatch('p19-h', OR);
     var sc = 1000 / P.greedy_ms640_path, x0 = 380;
     s += t(80, 190, 'plain greedy', { sans: true, weight: 600, size: 30 });
     s += r(x0, 158, P.greedy_ms640_path * sc, 50, 'url(#p19-h)');
@@ -782,7 +736,7 @@
     s += r(x0 + ms.substitution * sc, 268, ms.nielsen * sc, 50, BLUE, { op: 0.3 });
     s += t(x0 + ms.total * sc + 14, 302, k(ms.substitution) + ' + ' + k(ms.nielsen), { size: 26, fill: BLUE });
     s += t(x0, 360, 'substitutions + Nielsen maps, all 640 paths', { size: 22, op: 0.5 });
-    [[ms.median, 'median, MS-640'], [ms.max, 'longest, MS-640'], [get(M, 'census.median'), 'median, AC19 Aut-min'], [get(M, 'extended.median'), 'median, AC19 as written']]
+    [[ms.median, 'median, MS-640'], [ms.max, 'longest, MS-640'], [get(S2, 'ac_moves.median'), 'median, subset-60'], [get(S2, 'ac_moves.max'), 'longest, subset-60']]
       .forEach(function (p, i) {
         var x = 260 + i * 360;
         s += t(x, 530, k(p[0]), { sans: true, weight: 700, size: 64, anchor: 'middle' });
@@ -823,14 +777,15 @@
     add('a2-routes', 'What closed the old policy’s rows', 'AC19 census policy · ' + k(tot) + ' solves', s);
   })();
 
-  /* A3  where rows finish in the hash-free solver */
+  /* A3  where rows finish */
   (function () {
     var sets = [
-      { name: 'MS-640', st: P.ms640_stages || {} },
-      { name: 'subset-60', st: get(S, 'new.stages', {}) },
-      { name: 'AC19 Aut-min', st: get(P, 'census_curve.stages', {}) },
-      { name: 'AC19 as written', st: get(P, 'extended.stages', {}) }
+      { name: 'MS-640', st: fromRows(P.rank2_ms640) },
+      { name: 'subset-60', st: fromCounts(S2.stages) },
+      { name: 'AC19 Aut-min', st: fromRows((P.rank2_census || {}).stages) }
     ];
+    function fromRows(o) { o = o || {}; return { B: get(o, 'B.rows', 0), C: get(o, 'C.rows', 0), H: get(o, 'D.rows', 0), terminal: get(o, 'terminal.rows', 0) }; }
+    function fromCounts(o) { o = o || {}; return { B: o.B || 0, C: o.C || 0, H: o.D || 0 }; }
     var cols = { B: [BLUE, 0.3, 'primitive finish'], C: [BLUE, 0.6, 'pinch (BS) cascade'], H: [BLUE, 0.9, 'search'] }, s = '';
     sets.forEach(function (set, i) {
       var y = 140 + i * 120, tot = (set.st.B || 0) + (set.st.C || 0) + (set.st.H || 0) + (set.st.terminal || 0), x = 460;

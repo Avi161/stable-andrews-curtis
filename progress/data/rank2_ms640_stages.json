@@ -1,0 +1,18 @@
+{
+ "B": {
+  "rows": 98,
+  "median": 26.0,
+  "max": 41
+ },
+ "C": {
+  "rows": 328,
+  "median": 26.0,
+  "max": 283
+ },
+ "D": {
+  "rows": 214,
+  "median": 35.0,
+  "max": 102
+ },
+ "_source": "bench60 re-run 2026-09-22: hfcascade.solve(engine=fast, score=length, closed_set=sorted, nielsen, perms), budget 1000, research/ac_hashfree_cascade_20260914@ACSolverX:claude/vigilant-babbage-nnbuj0"
+}

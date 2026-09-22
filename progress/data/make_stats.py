@@ -283,6 +283,24 @@ def main():
                              stages=dict(stages), new_units=summ(new_units))
     dyn = [r for r in census if r['solved'] and not r.get('explicit_rank2', True)]
     P['census_stable_certs'] = len(dyn)
+    # the rank-two solver (the same engine with define / eliminate switched off), stage by stage
+    r2 = jsonl(X, VB, f'{REC}/census_fast_len_perms.jsonl.gz')
+    by = collections.defaultdict(list)
+    for r in r2:
+        if r['solved']:
+            by[r['stage']].append(r['units'])
+    P['rank2_census'] = dict(rows=len(r2), solved=sum(len(v) for v in by.values()),
+                             stages={k: dict(rows=len(v), median=med(v), max=max(v)) for k, v in by.items()})
+    P['rank2_ms640'] = json.loads((HERE / 'rank2_ms640_stages.json').read_text())
+    P['rank2'] = json.loads((HERE / 'rank2_runs.json').read_text())
+    r2u = [r['units'] for r in r2 if r['solved']]
+    P['census_curve_r2'] = dict(budgets=budgets, new=[sum(u <= b for u in r2u) for b in budgets],
+                                policy=P['census_curve']['policy'], solved=len(r2u), rows=len(r2),
+                                policy_solved=len(policy_nodes),
+                                new_crosses_policy_at=next((b for b in range(1, 1001) if sum(u <= b for u in r2u) >= len(policy_nodes)), None),
+                                new_total_units=sum(r2u) + 1000 * (len(r2) - len(r2u)),
+                                policy_total_units=P['census_curve']['policy_total_units'])
+    r2by = {r['name']: r for r in r2}
     ms_rec = jsonl(X, VB, f'{REC}/final3_ms640_hybrid.jsonl')
     P['ms640_stages'] = dict(collections.Counter(r['stage'] for r in ms_rec if r['solved']))
 
@@ -314,12 +332,13 @@ def main():
         s, n = solved_names(path)
         whole[label] = dict(solved=len(s), rows=len(n))
     P['ladder180'] = dict(rows=len(n180), steps=ladder, whole727=whole)
+    P['ladder180']['rank2_727'] = sum(1 for r in jsonl(X, VB, f'{REC}/final3_u727.jsonl') if r2by.get(r['name'], {}).get('solved'))
 
     # the nine rows no fixed-basis arm solved at 10,000,000 nodes
     nine = ['ac19_16286', 'ac19_27254', 'ac19_28131', 'ac19_44381', 'ac19_50841', 'ac19_51034',
             'ac19_59576', 'ac19_65753', 'ac19_7284']
     u727 = {r['name']: r for r in jsonl(X, VB, f'{REC}/final3_u727.jsonl')}
-    P['nine'] = [dict(name=n, units=u727[n]['units'], steps=u727[n].get('path_length')) for n in nine]
+    P['nine'] = [dict(name=n, units=r2by[n]['units'], hybrid_units=u727[n]['units']) for n in nine]
 
     # dynamic rank on the 41 rows the rank-two engine leaves at 1,000
     left31 = jsonl(X, VB, f'{REC}/left31_fast_hash_perms_b20k.jsonl')
@@ -452,7 +471,7 @@ def main():
                         wall=runs['s60_H']['search_wall_s'], batch=runs['s60_H']['batch_wall_s'],
                         stages=dict(collections.Counter(r['H_stage'] for r in rows))),
                per_row=[dict(id=r['id'], bin=int(r['bin']), greedy=float(r['greedy1M_saved_nodes']),
-                             greedy_path=float(r['greedy1M_saved_path']), new=float(r['H_units']),
+                             greedy_path=float(r['greedy1M_saved_path']), new=float(r['H_units']), r2=float(r['F_units']),
                              new_subs=float(r['H_substitution']), cascade=float(r['oldcascade_units']))
                         for r in rows])
     P['s60'] = s60

@@ -24,7 +24,7 @@ where stated); signed permutations are free.
     residue 2,130 → 1,200 for +5.9 % wall time. New solver: gates on generated children make MS-640 7× faster.
 11. **Census staircase.** Every row in the last four bars is replayed as elementary AC moves, including all 72,779
     hash-free certificates (79.2M moves, 0 failures, `data/hashfree_census_ac_decode.json`). 41 rows need a
-    define / eliminate step to finish within 1,000 units; their plain AC paths take 1,048–10,080 units. BS cascade:
+    rows the rank-two solver leaves at 1,000 units solve at 1,048–10,080 units. BS cascade:
     43,485 paths use basis changes (AC by transport, not expanded in that run). Nodes and units are different counters. The 72,779 of the table policy uses a
     12.8M-state backward table built once (uncharged lookups); the hash-free solver uses no table.
 12. **Solved vs budget.** The policy is cheaper on the easiest rows; the new solver passes its final count at 128 units.
@@ -39,9 +39,7 @@ where stated); signed permutations are free.
     (peak 25 → 77 on ac19x_21044). That is why these rows were unsolved at 10M: at some point the relator length has
     to go far above the current state, and a fixed-basis, length-ordered search never goes there. Nielsen edges let the
     hash-free solver walk around the spike instead (next slides).
-15. **Ingredient ladder.** Same 180 leftovers: memory 3 → 31, Nielsen edges → 172, perms → 175, define/eliminate → 180.
+15. **Ingredient ladder.** Same 180 leftovers: memory 3 → 31, Nielsen edges → 172, perms → 175.
 16. **Nine rows.** Fixed-basis search failed at 10M nodes; the hash-free solver needs 98–665 units.
-17. **Define / eliminate.** Stable AC moves (Lemma 11, arXiv:2408.15332). Rank-two certificates exist for all 41 at
-    ≤ 10,080 units.
-18. **Ablation.** Same machine, one core. Perms and define/eliminate cost nothing on MS-640 and are needed on the leftovers.
+18. **Ablation.** Same machine, one core, the rank-two solver with one part removed.
 19. **Path length.** AC moves = substitutions + Nielsen maps; not a lower bound.

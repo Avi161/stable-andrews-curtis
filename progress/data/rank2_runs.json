@@ -1,0 +1,140 @@
+{
+ "s60_F": {
+  "rows": 60,
+  "solved": 60,
+  "units": {
+   "n": 60,
+   "total": 4906,
+   "mean": 81.77,
+   "median": 45.5,
+   "max": 283
+  },
+  "pops": {
+   "n": 60,
+   "total": 598,
+   "mean": 9.97,
+   "median": 6.5,
+   "max": 44
+  },
+  "substitution": {
+   "n": 60,
+   "total": 3383,
+   "mean": 56.38,
+   "median": 16.0,
+   "max": 256
+  },
+  "nielsen": {
+   "n": 60,
+   "total": 195,
+   "mean": 3.25,
+   "median": 3.0,
+   "max": 9
+  },
+  "perm": {
+   "n": 60,
+   "total": 193,
+   "mean": 3.22,
+   "median": 2.5,
+   "max": 12
+  },
+  "ac_moves": {
+   "n": 60,
+   "total": 3578,
+   "mean": 59.63,
+   "median": 22.0,
+   "max": 259
+  },
+  "steps": {
+   "n": 60,
+   "total": 3771,
+   "mean": 62.85,
+   "median": 27.5,
+   "max": 259
+  },
+  "stages": {
+   "B": 4,
+   "C": 23,
+   "D": 33
+  },
+  "wall": 0.494
+ },
+ "ms640_F": {
+  "rows": 640,
+  "solved": 640,
+  "units": {
+   "n": 640,
+   "total": 25556,
+   "mean": 39.93,
+   "median": 29.0,
+   "max": 283
+  },
+  "pops": {
+   "n": 640,
+   "total": 2438,
+   "mean": 3.81,
+   "median": 0.0,
+   "max": 44
+  },
+  "substitution": {
+   "n": 640,
+   "total": 12314,
+   "mean": 19.24,
+   "median": 9.0,
+   "max": 256
+  },
+  "nielsen": {
+   "n": 640,
+   "total": 1442,
+   "mean": 2.25,
+   "median": 2.0,
+   "max": 9
+  },
+  "perm": {
+   "n": 640,
+   "total": 1031,
+   "mean": 1.61,
+   "median": 0.0,
+   "max": 12
+  },
+  "ac_moves": {
+   "n": 640,
+   "total": 13756,
+   "mean": 21.49,
+   "median": 10.0,
+   "max": 259
+  },
+  "steps": {
+   "n": 640,
+   "total": 14787,
+   "mean": 23.1,
+   "median": 11.0,
+   "max": 259
+  },
+  "stages": {
+   "B": 98,
+   "C": 328,
+   "D": 214
+  },
+  "wall": 2.062
+ },
+ "ms640_protocol": {
+  "rows": 640,
+  "solved": 640,
+  "verified": 640,
+  "search_wall": 2.2920636540002306,
+  "search_cpu": 2.2817915940000035,
+  "batch_wall_including_verification": 5.920200286999716,
+  "max_units": 283,
+  "total_units": 25556,
+  "max_wall_row": 0.17761234899990086,
+  "params": {
+   "budget": 1000,
+   "engine": "fast",
+   "score": "length",
+   "closed_set": "sorted",
+   "nielsen": true,
+   "perms": true
+  },
+  "cascade_protocol": true
+ }
+}
