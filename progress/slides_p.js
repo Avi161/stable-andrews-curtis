@@ -574,6 +574,43 @@
   })();
 
   /* =====================================================================
+     p13d  the same bands, as a chart
+     ===================================================================== */
+  (function () {
+    var D = P.difficulty || {}, bins = (D.bins || []).filter(function (b) { return b.n > 0; }), s = '';
+    var y0 = 560, y1 = 130;
+    function band(b) { return (b.lo ? tickLabel(b.lo) : '0') + '–' + tickLabel(b.hi); }
+    function panel(x0, x1, title, lo, hi, logScale, key, ticks) {
+      var out = t((x0 + x1) / 2, 92, title, { sans: true, weight: 600, size: 24, anchor: 'middle' });
+      function Y(v) { return logScale ? logy(Math.max(lo, v), lo, hi, y0, y1) : y0 - (v - lo) / (hi - lo) * (y0 - y1); }
+      ticks.forEach(function (v) {
+        out += l(x0, Y(v), x1, Y(v), INK, { op: 0.07, sw: 1 }) + t(x0 - 10, Y(v) + 7, logScale ? tickLabel(v) : v, { size: 18, anchor: 'end', op: 0.5 });
+      });
+      var gw = (x1 - x0) / bins.length;
+      bins.forEach(function (b, i) {
+        var gx = x0 + i * gw + gw * 0.14, bw = gw * 0.34;
+        [['g', OR, 0.8], ['s', BLUE, 0.85]].forEach(function (a, j) {
+          var m = b[a[0]][key + '_mean'], md = b[a[0]][key + '_median'], x = gx + j * bw;
+          out += r(x, Y(m), bw - 3, y0 - Y(m), a[1], { op: a[2] });
+          out += l(x - 2, Y(md), x + bw - 1, Y(md), INK, { sw: 3 });
+        });
+        out += t(x0 + i * gw + gw / 2, y0 + 26, band(b), { size: 16, anchor: 'middle', op: 0.6 });
+      });
+      out += l(x0, y0, x1, y0, INK);
+      return out;
+    }
+    s += panel(110, 760, 'nodes explored (log)', 1, 1e7, true, 'nodes', [1, 10, 100, 1000, 1e4, 1e5, 1e6, 1e7]);
+    s += panel(880, 1530, 'path length · substitution moves', 0, 140, false, 'path', [0, 35, 70, 105, 140]);
+    s += t(435, y0 + 56, 'difficulty band (nodes needed)', { size: 18, anchor: 'middle', op: 0.45 });
+    s += t(1205, y0 + 56, 'difficulty band (nodes needed)', { size: 18, anchor: 'middle', op: 0.45 });
+    s += r(110, 650, 20, 16, OR, { op: 0.8 }) + t(140, 665, 'plain greedy', { size: 20, fill: OR });
+    s += r(330, 650, 20, 16, BLUE, { op: 0.85 }) + t(360, 665, 'S20_MK2', { size: 20, fill: BLUE });
+    s += l(520, 658, 550, 658, INK, { sw: 3 }) + t(560, 665, 'median (bar = mean)', { size: 20, op: 0.7 });
+    s += foot('same bands as the table: rows both arms solve, grouped by the larger node count · ' + k(D.both) + ' rows · caps 48 up to 1M, 64 at 5M and 10M');
+    add('p13d-difficulty-chart', 'The gap grows with difficulty; paths do not', 'AC19 Aut-min · greedy vs S20_MK2', s);
+  })();
+
+  /* =====================================================================
      p14  the originals solve, their Aut-min representatives do not
      ===================================================================== */
   (function () {
