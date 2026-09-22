@@ -176,10 +176,11 @@
     s += fpath(id, 'M1370 470 V306', { blue: true }) + flab(1390, 400, 'yes', { anchor: 'start', blue: true });
     s += fpath(id, 'M1370 590 V640 H180 V586') + flab(900, 632, 'no — queue the children, take the next');
     s += fpath(id, 'M468 585 V640', { dash: true }) + flab(488, 614, 'yes: skip', { anchor: 'start' });
-    s += t(40, 250, 'BS cascade (6 Sep) = the smaller version:', { size: 20, op: 0.6 });
-    s += t(40, 278, 'A and C, then a search', { size: 20, op: 0.6 });
-    s += t(40, 306, 'Nielsen search adds B and checks B, C', { size: 20, op: 0.6 });
-    s += t(40, 334, 'on every child', { size: 20, op: 0.6 });
+    s += t(40, 238, 'BS cascade · 6 Sep · our earlier solver', { sans: true, weight: 600, size: 22 });
+    s += t(40, 270, '1. A: Nielsen maps while shorter', { size: 19, op: 0.7 });
+    s += t(40, 298, '2. C, for BS(1,2) b⁻¹ab = a² only', { size: 19, op: 0.7 });
+    s += t(40, 326, '3. search L + 40S, then S20_MK2', { size: 19, op: 0.7 });
+    s += t(40, 358, 'Nielsen search adds B, all of C, B + C on every child', { size: 17, fill: BLUE });
     var CR = P.rank2_census || {};
     s += t(800, 697, 'solved within 1,000 units:  AC19 Aut-min ' + k(CR.solved) + ' / ' + k(CR.rows) + '  ·  MS-640 640 / 640  ·  subset-60 ' + S2.solved + ' / ' + S2.rows,
       { sans: true, weight: 600, size: 22, anchor: 'middle', fill: BLUE });
