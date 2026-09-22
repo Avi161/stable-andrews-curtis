@@ -43,7 +43,10 @@ CITED = {
     'census_greedy_1k': (66086, 'results/heuristic_search/ac19_autmin_10k/RESULTS.md@claude/ac19-leftover-solver-notebook-6yan6d'),
     'census_s20_1k': (68475, 'results/heuristic_search/ac19_autmin_10k/RESULTS.md@claude/ac19-leftover-solver-notebook-6yan6d'),
     'census_cascade501': (70649, 'results/heuristic_search/ac19_cascade_screen/RESULTS.md@claude/ac19-leftover-solver-notebook-6yan6d'),
-    'census_notable_policy': (72562, 'results/heuristic_search/ac19_ball14_cascade_full_1k/SUMMARY.json (no-table control)@claude/ac19-theorem-strength-8v1wp6'),
+    'census_notable_policy': (72562, 'results/heuristic_search/ac19_K3p_notable_full_1k/SUMMARY.json@claude/ac19-theorem-strength-8v1wp6 (72,562 / 72,562 replayed as elementary AC moves)'),
+    'table_policy_elementary': (42304643, 'results/heuristic_search/ac19_ball14_cascade_full_1k/replay_check.json@claude/ac19-theorem-strength-8v1wp6 (72,779 / 72,779 replayed)'),
+    'cascade501_substitution_only': (27164, 'results/heuristic_search/ac19_cascade_screen/RESULTS.md@claude/ac19-leftover-solver-notebook-6yan6d'),
+    'cascade501_aut_assisted': (43485, 'same (paths with basis changes; AC by transport, not expanded in that run)'),
     'census_table14': (72779, 'results/heuristic_search/ac19_ball14_cascade_full_1k/SUMMARY.json@claude/ac19-theorem-strength-8v1wp6'),
     'table14_states': (12803449, 'research/residual_20260909/BACKWARD_TABLE.md@claude/ac19-theorem-strength-8v1wp6'),
     'table14_root_hits': (66151, 'results/heuristic_search/ac19_ball14_cascade_full_1k/SUMMARY.json@claude/ac19-theorem-strength-8v1wp6'),
@@ -185,6 +188,35 @@ def bs_table(pairs, preflight, canon):
 
 
 SYMBOL = {1: 'x', -1: 'X', 2: 'y', -2: 'Y'}
+INV = {'x': 'X', 'X': 'x', 'y': 'Y', 'Y': 'y'}
+
+
+def cyc_reduce(w):
+    s = []
+    for ch in w:
+        if s and s[-1] == INV[ch]:
+            s.pop()
+        else:
+            s.append(ch)
+    i = 0
+    while len(s) - 2 * i > 1 and s[i] == INV[s[len(s) - 1 - i]]:
+        i += 1
+    return ''.join(s[i:len(s) - i])
+
+
+def apply_phi(phi, w):
+    """Apply 'x->yyx, y->Y' to a word and cyclically reduce."""
+    m = {}
+    for part in phi.split(','):
+        a, b = part.strip().split('->')
+        m[a] = b
+    for a in 'xy':
+        m[a.upper()] = ''.join(INV[ch] for ch in reversed(m[a]))
+    return cyc_reduce(''.join(m[ch] for ch in w))
+
+
+def get_rows(costs):
+    return len({r['name'] for r in costs})
 
 
 def ms640_pairs(text):
@@ -313,7 +345,36 @@ def main():
     aut_pairs = [(r['r1'], r['r2']) for r in aut]
     P['bs'] = dict(ms640=bs_table(ms, preflight, canon_pair), ac19_autmin=bs_table(aut_pairs, preflight, canon_pair))
 
-    # ---- same-machine runs (this container, one core)
+    # ---- every hash-free census certificate expanded to elementary AC moves (decode_hashfree_census.py)
+    P['ac_decode'] = json.loads((HERE / 'hashfree_census_ac_decode.json').read_text())
+
+    # ---- fixed-basis budget ladder on the census: unsolved after each budget
+    LB = 'origin/claude/ac19-leftover-solver-notebook-6yan6d'
+    costs = csv_rows(X, LB, 'results/heuristic_search/ac19_autmin_10k/ac19_autmin_10k_costs.csv')
+    lad = {'greedy': [], 's20_mk2': []}
+    for arm in lad:
+        nodes = [int(r['nodes_explored']) if r['solved'] == '1' else None for r in costs if r['arm'] == arm]
+        for b in (100, 1000, 10000):
+            lad[arm].append(sum(1 for v in nodes if v is None or v > b))
+    # 100 and 1,000 from the full 10k run's per-row costs; 10k -> 10M is the archived chain each rung was run on
+    P['ladder_full'] = dict(budgets=[100, 1000] + P['ladder_budgets'],
+                            greedy=lad['greedy'][:2] + P['ladder_greedy'], s20=lad['s20_mk2'][:2] + P['ladder_s20'],
+                            rows=get_rows(costs), check_10k=dict(greedy=lad['greedy'][2], s20=lad['s20_mk2'][2]))
+
+    # ---- originals of the 28 orbits greedy cannot solve at 10M: the same moves from both starting points
+    OD = 'results/heuristic_search/ac19_orig_10m'
+    runs10m = {r['name']: r for r in jsonl(X, LB, f'{OD}/ac19_orig_10m_greedy_b10000000_mrl64.jsonl')}
+    trans = {r['name']: r for r in jsonl(X, LB, f'{OD}/ac19_orig_10m_transported_greedy.jsonl')}
+    origs = []
+    for row in csv_rows(X, LB, f'{OD}/ac19_orig_10m_originals.csv'):
+        n, t = row['original'], trans[row['original']]
+        path = runs10m[n]['path']
+        po = [len(a) + len(b) for a, b in path]
+        pr = [len(apply_phi(t['phi'], a)) + len(apply_phi(t['phi'], b)) for a, b in path]
+        origs.append(dict(orbit=row['autmin'], original=n, nodes=int(row['nodes_explored']), moves=int(row['path_length']),
+                          rep_moves=int(row['autmin_path_length']), phi=t['phi'], tail=t['tail_moves'],
+                          start_orig=po[0], start_rep=pr[0], peak_orig=max(po), peak_rep=max(pr), prof_orig=po, prof_rep=pr))
+    P['originals'] = origs
     runs = json.loads((HERE / 'same_machine_runs.json').read_text())
     P['runs'] = runs
 

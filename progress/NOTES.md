@@ -22,11 +22,23 @@ where stated); signed permutations are free.
    for n = 1 always, for n > 1 only when every pinch divides. A stall is not a counterexample.
 10. **Check at every state.** Old cascade: probing the BS pattern at every popped state cut the unsolved census
     residue 2,130 → 1,200 for +5.9 % wall time. New solver: gates on generated children make MS-640 7× faster.
-11. **Census staircase.** Nodes and units are different counters. The 72,779 of the table policy uses a
+11. **Census staircase.** Every row in the last four bars is replayed as elementary AC moves, including all 72,779
+    hash-free certificates (79.2M moves, 0 failures, `data/hashfree_census_ac_decode.json`). 41 rows need a
+    define / eliminate step to finish within 1,000 units; their plain AC paths take 1,048–10,080 units. BS cascade:
+    43,485 paths use basis changes (AC by transport, not expanded in that run). Nodes and units are different counters. The 72,779 of the table policy uses a
     12.8M-state backward table built once (uncharged lookups); the hash-free solver uses no table.
 12. **Solved vs budget.** The policy is cheaper on the easiest rows; the new solver passes its final count at 128 units.
 13. **Originals.** Every row of AC19_extended searched from its own spelling — no transport through an automorphism.
-14. **Length well.** Why Nielsen edges matter: the Aut-minimal spelling is the bottom of a well.
+13b. **Fixed-basis ladder.** Unsolved after 100 → 10M nodes: greedy 18,117 → 28, S20_MK2 14,475 → 9. At 10M greedy
+    solves 72,751 and S20_MK2 72,770 of 72,779. The 1M–10M rungs cost ≈215 core-hours and the 10M rung changed nothing.
+14. **Shortest spelling is hardest.** The 40 dataset originals of the 28 orbits greedy cannot solve at 10M all solve
+    (median 5,720 nodes); every representative fails at 10M. We used the originals to solve the Aut-min rows: run
+    greedy on the original, then carry its moves through the automorphism φ (plus a 1–4 move Nielsen tail).
+14b. **Same moves, much higher peak.** x = substitution move, y = total relator length. Applying the moves found from
+    the original to the Aut-min representative, the length spikes far above where it starts before it trivialises
+    (peak 25 → 77 on ac19x_21044). That is why these rows were unsolved at 10M: at some point the relator length has
+    to go far above the current state, and a fixed-basis, length-ordered search never goes there. Nielsen edges let the
+    hash-free solver walk around the spike instead (next slides).
 15. **Ingredient ladder.** Same 180 leftovers: memory 3 → 31, Nielsen edges → 172, perms → 175, define/eliminate → 180.
 16. **Nine rows.** Fixed-basis search failed at 10M nodes; the hash-free solver needs 98–665 units.
 17. **Define / eliminate.** Stable AC moves (Lemma 11, arXiv:2408.15332). Rank-two certificates exist for all 41 at

@@ -1,0 +1,18 @@
+{
+ "rows": 72779,
+ "decoded_and_replayed": 72779,
+ "failures": 0,
+ "failure_examples": [],
+ "certificate_source": {
+  "final3_census": 72591,
+  "census_fast_len_perms.jsonl.gz": 147,
+  "left31_fast_hash_perms_b20k.jsonl": 31,
+  "nine_rank2.jsonl": 9,
+  "census41_fast_v2.jsonl": 1
+ },
+ "rows_needing_more_than_1000_units": 40,
+ "max_units": 10080,
+ "elementary_moves_total": 79192710,
+ "elementary_moves_max": 68140,
+ "wall_s": 97.3
+}

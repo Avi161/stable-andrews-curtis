@@ -349,9 +349,11 @@
       s += t(x0 + w + 12, y + 7, k(row.v), { size: 24, fill: row.col === BLUE ? BLUE : INK });
     });
     var xa = x0 + (total - lo) * sc;
-    s += t(x0 - 6, 680, '≈ ' + k(lo), { size: 20, anchor: 'start', op: 0.4 });
-    s += foot('unsolved ' + [P.census_greedy_1k, P.census_s20_1k, P.census_cascade501, H.policy_solved, P.census_notable_policy, total]
-      .map(function (v) { return k(total - v); }).join(' → ') + ' · axis starts at ' + k(lo) + ' · nodes and units are different counters');
+    var AD = P.ac_decode || {};
+    s += t(80, 668, 'last four bars: every row replayed as elementary AC moves \u00b7 hash-free: ' + k(AD.decoded_and_replayed) + ' / ' + k(AD.rows) +
+      ', ' + (AD.elementary_moves_total / 1e6).toFixed(1) + 'M moves, 0 failures', { size: 20, fill: BLUE, op: 0.9 });
+    s += foot('BS cascade: ' + k(P.cascade501_aut_assisted) + ' of its paths change basis (AC by transport, not expanded in that run) · hash-free: ' +
+      '41 rows need a define / eliminate step within 1,000 units; their plain AC paths take 1,048–' + k(AD.max_units) + ' · axis from ' + k(lo));
     add('p11-census', 'AC19: all ' + k(total) + ', no table', 'Aut-minimal census · per-row budget', s);
   })();
 
@@ -404,26 +406,89 @@
   })();
 
   /* =====================================================================
-     p14  why: the shortest spelling is the hardest
+     p13b  fixed basis: unsolved after each node budget
      ===================================================================== */
   (function () {
-    var s = '';
-    s += t(420, 150, 'original spelling', { sans: true, weight: 600, size: 32, anchor: 'middle' });
-    s += t(420, 300, P.orig_rows + ' / ' + P.orig_rows, { sans: true, weight: 700, size: 120, anchor: 'middle', fill: BLUE });
-    s += t(420, 350, 'solve · median ' + k(P.orig_median_nodes) + ' nodes', { size: 24, anchor: 'middle', op: 0.55 });
-    s += l(800, 110, 800, 400, INK, { op: 0.12 });
-    s += t(1180, 150, 'Aut-minimal representative', { sans: true, weight: 600, size: 32, anchor: 'middle' });
-    s += t(1180, 300, '0 / ' + P.orig_orbits, { sans: true, weight: 700, size: 120, anchor: 'middle', fill: OR });
-    s += t(1180, 350, 'solve at 10,000,000 nodes', { size: 24, anchor: 'middle', op: 0.55 });
-    /* a length well: the short start sits at the bottom; a fixed basis must climb out */
-    s += t(800, 450, 'peak along the same path: ' + P.orig_peak_before + ' → ' + P.orig_peak_after, { size: 26, anchor: 'middle' });
-    s += t(800, 490, 'so let the basis move: Nielsen maps as search edges', { size: 26, anchor: 'middle', fill: BLUE });
-    var wx = 470, wy = 520;
-    s += '<path d="M' + wx + ' ' + (wy + 10) + ' C ' + (wx + 160) + ' ' + (wy + 10) + ', ' + (wx + 230) + ' ' + (wy + 110) + ', ' + (wx + 330) + ' ' + (wy + 110) +
-      ' S ' + (wx + 500) + ' ' + (wy + 10) + ', ' + (wx + 660) + ' ' + (wy + 10) + '" fill="none" stroke="' + INK + '" stroke-width="3" stroke-opacity="0.35"/>';
-    s += c(wx + 330, wy + 110, 9, OR) + t(wx + 330, wy + 146, 'shortest spelling', { size: 20, anchor: 'middle', fill: OR });
-    s += foot('AC19, plain greedy, the ' + P.orig_orbits + ' orbits it cannot solve at 10M · the same moves, carried through the automorphism, climb higher from the shorter start');
-    add('p14-well', 'The shortest spelling is the hardest', 'AC19 · original vs Aut-minimal', s);
+    var F = P.ladder_full || {}, bud = F.budgets || [], g = F.greedy || [], s2 = F.s20 || [], s = '';
+    var base = 560, lo = 1, hi = 30000;
+    function Y(v) { return logy(Math.max(1, v), lo, hi, base, 120); }
+    [1, 10, 100, 1000, 10000].forEach(function (v) {
+      s += l(120, Y(v), 1180, Y(v), INK, { op: 0.07, sw: 1 }) + t(108, Y(v) + 8, tickLabel(v), { size: 20, anchor: 'end', op: 0.5 });
+    });
+    bud.forEach(function (b, i) {
+      var x = 150 + i * 148;
+      s += r(x, Y(g[i]), 56, base - Y(g[i]), OR, { op: 0.8 }) + t(x + 28, Y(g[i]) - 10, k(g[i]), { size: 16, anchor: 'middle', fill: OR });
+      s += r(x + 62, Y(s2[i]), 56, base - Y(s2[i]), BLUE, { op: 0.85 }) + t(x + 90, Y(s2[i]) - 10, k(s2[i]), { size: 16, anchor: 'middle', fill: BLUE });
+      s += t(x + 59, base + 34, tickLabel(b), { size: 22, anchor: 'middle', op: 0.6 });
+    });
+    s += l(120, base, 1180, base, INK);
+    s += t(650, base + 70, 'node budget per row', { size: 22, anchor: 'middle', op: 0.5 });
+    s += l(1240, 110, 1240, 600, INK, { op: 0.12 });
+    s += t(1400, 160, 'solved at 10M', { sans: true, weight: 600, size: 28, anchor: 'middle' });
+    s += t(1400, 260, k(F.rows - g[g.length - 1]), { sans: true, weight: 700, size: 56, anchor: 'middle', fill: OR });
+    s += t(1400, 296, 'plain greedy', { size: 22, anchor: 'middle', op: 0.6 });
+    s += t(1400, 400, k(F.rows - s2[s2.length - 1]), { sans: true, weight: 700, size: 56, anchor: 'middle', fill: BLUE });
+    s += t(1400, 436, 'S20_MK2', { size: 22, anchor: 'middle', op: 0.6 });
+    s += t(1400, 520, 'of ' + k(F.rows), { size: 22, anchor: 'middle', op: 0.45 });
+    s += foot('unsolved AC19 Aut-min rows, fixed basis, log scale · 100 and 1k from the full 10k run · 10k → 10M: each rung ran the previous failures' +
+      ' · fresh 10k re-run: ' + k(F.check_10k.greedy) + ' / ' + k(F.check_10k.s20) + ' · ≈' + P.ladder_core_hours + ' core-hours for 1M–10M');
+    add('p13b-ladder', 'Fixed basis: ' + g[g.length - 1] + ' and ' + s2[s2.length - 1] + ' left at 10M nodes', 'AC19 Aut-min · unsolved after each budget', s);
+  })();
+
+  /* =====================================================================
+     p14  the originals solve, their Aut-min representatives do not
+     ===================================================================== */
+  (function () {
+    var O = (P.originals || []).slice().sort(function (a, b) { return a.orbit === b.orbit ? a.nodes - b.nodes : (a.orbit < b.orbit ? -1 : 1); });
+    var x0 = 150, x1 = 1480, lo = 100, hi = 2e7, y0 = 560, y1 = 110, s = '';
+    function Y(v) { return logy(v, lo, hi, y0, y1); }
+    [100, 1000, 1e4, 1e5, 1e6, 1e7].forEach(function (v) {
+      s += l(x0, Y(v), x1, Y(v), INK, { op: 0.07, sw: 1 }) + t(x0 - 14, Y(v) + 8, tickLabel(v), { size: 20, anchor: 'end', op: 0.5 });
+    });
+    s += l(x0, Y(1e7), x1, Y(1e7), OR, { dash: '10 7', op: 0.8, sw: 2 });
+    s += t(x1, Y(1e7) - 16, 'every Aut-min representative: unsolved at 10,000,000 nodes · 0 / ' + P.orig_orbits, { size: 22, anchor: 'end', fill: OR });
+    var prev = null, gx = 0;
+    O.forEach(function (o, i) {
+      var x = x0 + 20 + i * (x1 - x0 - 40) / (O.length - 1);
+      if (o.orbit !== prev) { gx++; prev = o.orbit; }
+      s += l(x, Y(o.nodes), x, Y(1e7), INK, { op: 0.08, sw: 2 });
+      s += c(x, Y(o.nodes), 7, BLUE, { op: 0.9 });
+    });
+    var med = P.orig_median_nodes;
+    s += l(x0, Y(med), x1, Y(med), BLUE, { dash: '4 6', op: 0.5 });
+    s += t(x0 + 10, Y(2e6), 'originals: ' + O.length + ' / ' + O.length + ' solve · median ' + k(med) + ' nodes', { size: 22, fill: BLUE });
+    s += t((x0 + x1) / 2, y0 + 40, 'the ' + O.length + ' dataset originals of the ' + P.orig_orbits + ' orbits, grouped by orbit', { size: 22, anchor: 'middle', op: 0.5 });
+    s += foot('plain greedy, 10,000,000-node budget, cap 64, on both spellings · the representative is shorter (median start 25 → 19 letters) and still harder');
+    add('p14-well', 'The shortest spelling is the hardest', 'AC19 · original spelling vs its Aut-min representative', s);
+  })();
+
+  /* =====================================================================
+     p14b  the same moves from both starting points
+     ===================================================================== */
+  (function () {
+    var want = ['ac19x_21044', 'ac19x_8769', 'ac19x_39050', 'ac19x_62350', 'ac19x_91095', 'ac19x_115001', 'ac19x_144949', 'ac19x_74462'];
+    var byName = {};
+    (P.originals || []).forEach(function (o) { byName[o.original] = o; });
+    var pick = want.map(function (n) { return byName[n]; }).filter(Boolean), s = '';
+    var W = 330, Hh = 220, gapx = 42, gapy = 76, X0 = 70, Y0 = 100;
+    pick.forEach(function (o, i) {
+      var col = i % 4, row = Math.floor(i / 4), px = X0 + col * (W + gapx), py = Y0 + row * (Hh + gapy);
+      var n = o.prof_orig.length - 1, top = Math.max.apply(null, o.prof_rep.concat(o.prof_orig)) * 1.08;
+      function X(j) { return px + j * W / n; }
+      function Y(v) { return py + Hh - v * Hh / top; }
+      s += l(px, py + Hh, px + W, py + Hh, INK, { op: 0.35 }) + l(px, py, px, py + Hh, INK, { op: 0.2 });
+      s += t(px, py - 14, o.orbit + ' · ' + o.original, { size: 17, op: 0.6 });
+      s += '<polyline fill="none" stroke="' + BLUE + '" stroke-width="2.5" points="' + o.prof_orig.map(function (v, j) { return X(j).toFixed(1) + ',' + Y(v).toFixed(1); }).join(' ') + '"/>';
+      s += '<polyline fill="none" stroke="' + OR + '" stroke-width="2.5" points="' + o.prof_rep.map(function (v, j) { return X(j).toFixed(1) + ',' + Y(v).toFixed(1); }).join(' ') + '"/>';
+      s += t(px + W, py + 18, o.peak_orig + ' → ' + o.peak_rep, { size: 20, anchor: 'end', fill: OR });
+      s += t(px + W, py + Hh + 24, n + ' moves', { size: 16, anchor: 'end', op: 0.45 });
+    });
+    s += l(470, 30, 510, 30, BLUE, { sw: 3 }) + t(520, 37, 'from the original', { size: 21, fill: BLUE });
+    s += l(800, 30, 840, 30, OR, { sw: 3 }) + t(850, 37, 'same moves, from its Aut-min rep', { size: 21, fill: OR });
+    var peaks = (P.originals || []).map(function (o) { return o.peak_rep - o.peak_orig; }).filter(function (d) { return d > 0; }).length;
+    s += foot('x: AC move · y: total relator length · label: peak from the original → peak from the rep · higher on ' + peaks + ' of ' + (P.originals || []).length +
+      ' originals · to trivialise, the rep must climb far above where it starts, which fixed-basis search never reaches');
+    add('p14b-profiles', 'Same moves, much higher peak', 'why the Aut-min rows resist 10M nodes', s);
   })();
 
   /* =====================================================================
@@ -557,23 +622,6 @@
   /* ---------- core ends here; appendix below ---------- */
   DECK.APPENDIX_START = DECK.ORDER.length;
 
-  /* A1  the fixed-basis node ladder on the census */
-  (function () {
-    var bud = P.ladder_budgets || [], g = P.ladder_greedy || [], s20 = P.ladder_s20 || [], s = '';
-    var base = 590, lo = 1, hi = 1000;
-    function Y(v) { return logy(Math.max(1, v), lo, hi, base, 120); }
-    bud.forEach(function (b, i) {
-      var x = 220 + i * 250;
-      s += r(x, Y(g[i]), 80, base - Y(g[i]), OR, { op: 0.8 }) + t(x + 40, Y(g[i]) - 12, g[i], { size: 24, anchor: 'middle', fill: OR });
-      s += r(x + 90, Y(s20[i]), 80, base - Y(s20[i]), BLUE, { op: 0.85 }) + t(x + 130, Y(s20[i]) - 12, s20[i], { size: 24, anchor: 'middle', fill: BLUE });
-      s += t(x + 85, base + 36, tickLabel(b), { size: 22, anchor: 'middle', op: 0.6 });
-    });
-    s += l(200, base, 1460, base, INK);
-    s += r(220, 650, 20, 18, OR, { op: 0.8 }) + t(250, 666, 'plain greedy', { size: 22, fill: OR });
-    s += r(470, 650, 20, 18, BLUE, { op: 0.85 }) + t(500, 666, 'S20_MK2', { size: 22, fill: BLUE });
-    s += foot('unsolved AC19 Aut-min rows after each node budget, fixed basis · the 1M–10M rungs cost ≈' + P.ladder_core_hours + ' core-hours and the 10M rung changed nothing · log scale');
-    add('a1-ladder', 'More nodes stopped helping', 'fixed basis · 10k → 10M nodes', s);
-  })();
 
   /* A2  which rule closed the old policy's rows */
   (function () {
