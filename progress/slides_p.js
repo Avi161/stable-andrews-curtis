@@ -152,8 +152,8 @@
     s += fbox(270, 60, 330, 90, 'A · Whitehead descent', ['apply a Nielsen map', 'while it shortens']);
     s += fdia(770, 105, 300, 120, 'B · primitive?', 'a letter used once');
     s += fbox(970, 60, 270, 90, 'substitute it away', ['r = x^±1 yⁿ  or  xᵐ y^±1'], { tint: true, stat: st('B') });
-    s += fdia(770, 300, 300, 120, 'C · BS-shaped?', 'g^a h^p g^-a h^q');
-    s += fbox(970, 255, 270, 90, 'pinch cascade', ['b⁻¹a → a²b⁻¹  (one move)', 'repeat until one b left'], { tint: true, stat: st('C') });
+    s += fdia(770, 300, 300, 120, 'C · pinch works?', 'g^a h^p g^-a h^q');
+    s += fbox(970, 245, 270, 110, 'pinch · y⁻¹xy = x²', ['y⁻¹xᵏy → x²ᵏ  (k moves)', 'until one y is left;', 'sure if y-exp. sum = ±1'], { tint: true, stat: st('C') });
     s += fbox(1300, 190, 270, 110, '(x, y)', ['AC path, replayed by', 'an independent verifier'], { done: true });
     s += '<rect x="20" y="420" width="1560" height="250" rx="16" fill="none" stroke="rgba(25,24,19,0.18)" stroke-dasharray="8 7"/>';
     s += t(120, 448, 'D · best-first search with whatever is left of the 1,000 units', { size: 17, op: 0.6 });
@@ -169,7 +169,7 @@
     s += fpath(id, 'M770 165 V234') + flab(790, 205, 'no', { anchor: 'start' });
     s += fpath(id, 'M920 300 H964', { blue: true }) + flab(942, 287, 'yes', { blue: true });
     s += fpath(id, 'M1240 300 H1265 V245 H1294', { blue: true });
-    s += fpath(id, 'M770 360 V395 H90 V474') + flab(790, 385, 'no', { anchor: 'start' });
+    s += fpath(id, 'M770 360 V395 H90 V474') + flab(752, 385, 'no, or a pinch stalls', { anchor: 'end' });
     s += fpath(id, 'M320 530 H362');
     s += fpath(id, 'M568 530 H584') + flab(577, 508, 'no');
     s += fpath(id, 'M920 530 H954') + fpath(id, 'M1200 530 H1219');
@@ -178,7 +178,7 @@
     s += fpath(id, 'M468 585 V640', { dash: true }) + flab(488, 614, 'yes: skip', { anchor: 'start' });
     s += t(40, 238, 'BS cascade · 6 Sep · our earlier solver', { sans: true, weight: 600, size: 22 });
     s += t(40, 270, '1. A: Nielsen maps while shorter', { size: 19, op: 0.7 });
-    s += t(40, 298, '2. C, for BS(1,2) b⁻¹ab = a² only', { size: 19, op: 0.7 });
+    s += t(40, 298, '2. C, for BS(1,2) y⁻¹xy = x² only', { size: 19, op: 0.7 });
     s += t(40, 326, '3. search L + 40S, then S20_MK2', { size: 19, op: 0.7 });
     s += t(40, 358, 'Nielsen search adds B, all of C, B + C on every child', { size: 17, fill: BLUE });
     var CR = P.rank2_census || {};
